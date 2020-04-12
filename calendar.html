@@ -2,32 +2,75 @@
 <html lang="en">
 <head>
     <title>Temple Class Scheduler</title>
-    <script type="text/javascript" src="calendar.js"></script>
 
     <style>
-        @media screen and (min-width:400px) {
-            .schedule {
-                display: grid;
-                grid-template-rows:
-                        [tracks] auto
-                        [time-0800] 1fr
-                        [time-0830] 1fr
-                        [time-0900] 1fr
-                        [time-0930] 1fr
-                        [time-1000] 1fr
-                        [time-1030] 1fr
-                        [time-1100] 1fr
-                        [time-1130] 1fr
-                        [time-1200] 1fr;
+        html, body {
+            height: 100%;
+            margin: 0;
+            background-color: white;
+        }
 
+        @media screen and (min-width:400px) {
+            .scheduleDays {
+                grid-column-gap: 10px;
+                width: 100%;
+                display: grid;
                 grid-template-columns:
-                        [times] 5em
+                        [times] 1fr
                         [track-mon-start] 1fr
                         [track-mon-end track-tue-start] 1fr
                         [track-tue-end track-wed-start] 1fr
                         [track-wed-end track-thr-start] 1fr
                         [track-thr-end track-fri-start] 1fr
                         [track-fri-end];
+            }
+            .schedule {
+                grid-row-gap: 5px;
+                grid-column-gap: 10px;
+                width: 100%;
+                height: auto;
+                display: grid;
+                grid-template-rows:
+                        [tracks] auto
+                        [time-0800] 2em
+                        [time-0830] 2em
+                        [time-0900] 2em
+                        [time-0930] 2em
+                        [time-1000] 2em
+                        [time-1030] 2em
+                        [time-1100] 2em
+                        [time-1130] 2em
+                        [time-1200] 2em
+                        [time-1230] 2em
+                        [time-1300] 2em
+                        [time-1330] 2em
+                        [time-1400] 2em
+                        [time-1430] 2em
+                        [time-1500] 2em
+                        [time-1530] 2em
+                        [time-1600] 2em
+                        [time-1630] 2em
+                        [time-1700] 2em
+                        [time-1730] 2em
+                        [time-1800] 2em
+                        [time-1830] 2em
+                        [time-1900] 2em
+                        [time-1930] 2em
+                        [time-2000] 2em
+                        [time-2030] 2em
+                        [time-2100] 2em
+                        [time-2130] 2em
+                        [time-2200] 2em;
+
+                grid-template-columns:
+                        [times] 1fr
+                        [track-mon-start] 1fr
+                        [track-mon-end track-tue-start] 1fr
+                        [track-tue-end track-wed-start] 1fr
+                        [track-wed-end track-thr-start] 1fr
+                        [track-thr-end track-fri-start] 1fr
+                        [track-fri-end];
+
             }
         }
 
@@ -36,7 +79,10 @@
         }
 
         .track-slot {
-            display: none; /* hidden on small screens and browsers without grid support */
+            background: lightgrey;
+            text-align: center;
+            border-radius: 10px;
+            display: none;
         }
 
         @supports( display:grid ) {
@@ -44,17 +90,10 @@
                 .track-slot {
                     display: block;
                     position: sticky;
-                    top: 0;
-                    z-index: 1000;
-                    background-color: rgba(255,255,255,.9);
                 }
             }
         }
 
-        /* Small-screen & fallback styles */
-        .session {
-            margin-bottom:  1em;
-        }
 
         @supports( display:grid ) {
             @media screen and (min-width: 400px) {
@@ -64,33 +103,21 @@
             }
         }
 
-        /*************************
-         * VISUAL STYLES
-         * Design-y stuff ot particularly important to the demo
-         *************************/
         body {
-            padding-top: 50px;
-            max-width: 1100px;
             margin: 0 auto;
             line-height: 1.5;
             width: 100%;
         }
 
         .session {
-            border-radius: 2px;
+            border-radius: 10px;
             font-size: 14px;
         }
 
-        .session-title,
-        .session-time,
-        .session-track,
-        .session-presenter {
-            display: block;
-        }
+
 
         .session-title,
         .time-slot {
-            margin: .5em;
             font-size: 1em;
         }
 
@@ -103,92 +130,71 @@
             min-height: 50px;
         }
 
-        .track-mon {
-            background-color: #1259B2;
-            color: #fff;
-        }
-
-        .track-tue {
-            background-color: #687f00;
-            color: #fff;
-        }
-
-        .track-wed {
-            background-color: #544D69;
-            color: #fff;
-        }
-
-        .track-thr {
-            background-color: #c35500;
-            color: #fff;
-        }
-
-
-
-        .track-all {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #ccc;
-            color: #000;
-            box-shadow: none;
-            text-align: center;
-        }
-
-        .text {
-            max-width: 750px;
-            font-size: 18px;
-            margin: 0 auto 50px;
-        }
-
-        .meta {
-            color: #555;
-            font-style: italic;
-        }
-
-        .meta a {
-            color: #555;
-        }
-
-        hr {
-            margin: 40px 0;
-        }
     </style>
 </head>
 <body>
 <div>
-    <div class="schedule" aria-labelledby="schedule-heading" id="schedule">
-
-        <span class="track-slot" aria-hidden="true" style="grid-column: track-mon; grid-row: tracks;">Monday</span>
-        <span class="track-slot" aria-hidden="true" style="grid-column: track-tue; grid-row: tracks;">Tuesday</span>
-        <span class="track-slot" aria-hidden="true" style="grid-column: track-wed; grid-row: tracks;">Wednesday</span>
-        <span class="track-slot" aria-hidden="true" style="grid-column: track-thr; grid-row: tracks;">Thursday</span>
-        <span class="track-slot" aria-hidden="true" style="grid-column: track-fri; grid-row: tracks;">Friday</span>
-
-        <h2 class="time-slot" style="grid-row: time-0800;">8:00am</h2>
-        <h2 class="time-slot" style="grid-row: time-0830;">8:30am</h2>
-        <h2 class="time-slot" style="grid-row: time-0900;">9:00am</h2>
-        <h2 class="time-slot" style="grid-row: time-0930;">9:30am</h2>
-        <h2 class="time-slot" style="grid-row: time-1000;">10:00am</h2>
-        <h2 class="time-slot" style="grid-row: time-1030;">10:30am</h2>
-        <h2 class="time-slot" style="grid-row: time-1100;">11:00am</h2>
-        <h2 class="time-slot" style="grid-row: time-1130;">11:30am</h2>
-        <h2 class="time-slot" style="grid-row: time-1200;">12:00pm</h2>
-
-        <div class="session session-1 track-mon" style="grid-column: track-mon; grid-row: time-0800 / time-0900; height:50%;">
-            <h3 class="session-title">Talk Title</h3>
-        </div>
-
-        <div class="session session-11 track-wed" style="grid-column: track-mon; grid-row: time-0900 / time-1000;">
-            <h3 class="session-title">Talk Title</h3>
-        </div>
-
-
-
+    <div class="scheduleDays" aria-labelledby="schedule-heading" style="position: fixed; width: 100%; background-color: white">
+        <div class="track-slot" aria-hidden="true" style="grid-column: track-mon; grid-row: tracks;"><p>Monday</p></div>
+        <div class="track-slot" aria-hidden="true" style="grid-column: track-tue; grid-row: tracks;"><p>Tuesday</p></div>
+        <div class="track-slot" aria-hidden="true" style="grid-column: track-wed; grid-row: tracks;"><p>Wednesday</p></div>
+        <div class="track-slot" aria-hidden="true" style="grid-column: track-thr; grid-row: tracks;"><p>Thursday</p></div>
+        <div class="track-slot" aria-hidden="true" style="grid-column: track-fri; grid-row: tracks;"><p>Friday</p></div>
     </div>
+
+    <div style="padding-top: 60px;" id="test">
+        <div class="schedule" aria-labelledby="schedule-heading" id="schedule">
+            <h2 class="time-slot" style="grid-row: time-0800;">8:00am</h2>
+            <h2 class="time-slot" style="grid-row: time-0830;">8:30am</h2>
+            <h2 class="time-slot" style="grid-row: time-0900;">9:00am</h2>
+            <h2 class="time-slot" style="grid-row: time-0930;">9:30am</h2>
+            <h2 class="time-slot" style="grid-row: time-1000;">10:00am</h2>
+            <h2 class="time-slot" style="grid-row: time-1030;">10:30am</h2>
+            <h2 class="time-slot" style="grid-row: time-1100;">11:00am</h2>
+            <h2 class="time-slot" style="grid-row: time-1130;">11:30am</h2>
+            <h2 class="time-slot" style="grid-row: time-1200;">12:00pm</h2>
+            <h2 class="time-slot" style="grid-row: time-1230;">12:30pm</h2>
+            <h2 class="time-slot" style="grid-row: time-1300;">1:00pm</h2>
+            <h2 class="time-slot" style="grid-row: time-1330;">1:30pm</h2>
+            <h2 class="time-slot" style="grid-row: time-1400;">2:00pm</h2>
+            <h2 class="time-slot" style="grid-row: time-1430;">2:30pm</h2>
+            <h2 class="time-slot" style="grid-row: time-1500;">3:00pm</h2>
+            <h2 class="time-slot" style="grid-row: time-1530;">3:30pm</h2>
+            <h2 class="time-slot" style="grid-row: time-1600;">4:00pm</h2>
+            <h2 class="time-slot" style="grid-row: time-1630;">4:30pm</h2>
+            <h2 class="time-slot" style="grid-row: time-1700;">5:00pm</h2>
+            <h2 class="time-slot" style="grid-row: time-1730;">5:30pm</h2>
+            <h2 class="time-slot" style="grid-row: time-1800;">6:00pm</h2>
+            <h2 class="time-slot" style="grid-row: time-1830;">6:30pm</h2>
+            <h2 class="time-slot" style="grid-row: time-1900;">7:00pm</h2>
+            <h2 class="time-slot" style="grid-row: time-1930;">7:30pm</h2>
+            <h2 class="time-slot" style="grid-row: time-2000;">8:00pm</h2>
+            <h2 class="time-slot" style="grid-row: time-2030;">8:30pm</h2>
+            <h2 class="time-slot" style="grid-row: time-2100;">9:00pm</h2>
+            <h2 class="time-slot" style="grid-row: time-2130;">9:30pm</h2>
+            <h2 class="time-slot" style="grid-row: time-2200;">10:00pm</h2>
+
+
+
+            <div class="session track-mon" style="grid-column: track-tue; grid-row: time-0800 / time-0900; height:75%; background-color:#35626e; color: white;">
+                    <h3 class="session-title" style="margin:.5em;">CIS1001</h3>
+            </div>
+
+            <div class="session track-mon" style="grid-column: track-wed; grid-row: time-0800 / time-0900; background-color:#35626e; color: white;">
+                <h3 class="session-title" style="margin:.5em;">CIS1001</h3>
+            </div>
+
+
+
+        </div>
+    </div>
+
+
 
 
 </div>
 
+
+<script type="text/javascript" src="calendar.js"></script>
 </body>
 </html>

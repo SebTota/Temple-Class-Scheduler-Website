@@ -3,21 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>Temple Class Scheduler</title>
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 10px;
+        }
+    </style>
 </head>
 <body>
-<div>
-    <h1 style="margin:auto; text-align: center;">Temple Class Scheduler</h1>
-    <div style="margin: auto">
+<div style="height: 100%;">
+    <h1 style="text-align: center;">Temple Class Scheduler</h1>
+    <div style="height: 100%;">
         <p>Enter all classes you need to take this semester separated by commas. </p>
         <p>Ex. "CIS1001, CIS1002, MATH1001, PHY0800"</p>
         <input id="classesInput">
         <button id="btnFindSchedules">Find Schedules</button>
 
-        <div id="calendar" style="width: 100%; margin: 0 auto; height: 500px;"></div>
+        <div id="calendar" style="width: 50%; margin-top: 20px; height: 50%;"></div>
 
 
         <script src="script.js"></script>
-        <script>document.getElementById("calendar").innerHTML='<object type="text/html" data="calendar.html" style="width:100%; height:100%"></object>';</script>
+        <script>document.getElementById("calendar").innerHTML='<object type="text/html" data="calendar.html" style="width:100%; height:100%;"></object>';</script>
 
     </div>
 </div>
