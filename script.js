@@ -16,7 +16,7 @@ function genClassArrStr(classes) {
     return classUrl; // Return string
 }
 
-// Make an api call to return all sections of each course in array 'classes'
+// Make an api call to return all weekSchedule of each course in array 'classes'
 async function getClasses(classes) {
     let apiCall = apiUrl + ":" + apiPort + "/classes?" + genClassArrStr(classes);
 
