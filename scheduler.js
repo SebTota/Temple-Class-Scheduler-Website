@@ -113,10 +113,13 @@ function scheduleOrderConcat(schedule, newClass) {
 * class can be added ot the current schedule.
  */
 function checkScheduleFit(schedule, newClass) {
+    let tempSchedule = [];
+    for (let day = 0; day < 5; day++) {
+        tempSchedule[day] = [];
+    }
+
     for (let day = 0 ; day < daysOfTheWeek; day++) {
-        // Check if newClass has any meeting times on specified day by checking length of meetingTime array for
-        // specified day
-        if (newClass[day].length === 0) {
+        if (newClass[day].length === 0 && schedule[day].length === 0) {
             continue; // Skip to the next day of the week
         }
 
@@ -124,14 +127,15 @@ function checkScheduleFit(schedule, newClass) {
         * Call scheduleOrderConcat to check if newClass can be added to schedule without time conflict.
         * If time conflict found return -1
          */
-        schedule[day] = scheduleOrderConcat(schedule[day], newClass[day]);
-        if (schedule[day] === -1)
+        tempSchedule[day] = scheduleOrderConcat(schedule[day], newClass[day]);
+        if (tempSchedule[day] === -1) {
             // scheduleOrderConcat returned time conflict on specified day
             // return -1 to indicate schedule could not be created
             return -1;
-
+        }
     }
-    return schedule;
+
+    return tempSchedule;
 }
 
 function checkClasses(data) {
@@ -167,29 +171,48 @@ var class3 = {schedule: parseScheduleInput("Mon12301400,Fri09101220,"), instruct
 
 let classes =[class1, class2, class3];
 
-let testSchedule = {schedule: [], classes: []};
-for (let day = 0; day < 5; day++) {
-    testSchedule.schedule[day] = [];
-}
+let availSchedules = {schedule: [], classes: []};
 
 // testSchedule = checkScheduleFit(class1.schedule, class2.schedule);
 // testSchedule = checkScheduleFit(testSchedule, class3.schedule);
 
-let classList = ['cis1001', 'cis1166'];
+// let classList = ['cis1001', 'cis1166', 'acct2101'];
 
 
-async function scheduleChecker() {
-    for (let u = 0; u < classList.length; u++) {
-        let classSchedule = await getClass(classList[u]);
-
-        console.log(classSchedule);
-        if (testSchedule.schedule === -1) {
-            console.log("No possible schedule could be made");
-        }
-
+async function scheduleChecker(classList) {
+    let testSchedule = [];
+    for (let day = 0; day < 5; day++) {
+        testSchedule[day] = [];
     }
+
+
+    for (let u = 0; u < classList.length; u++) {
+        let courseSchedules = await getClass(classList[u]);
+
+        for (let q = 0; q < courseSchedules.length; q++) {
+            let classSchedule = parseScheduleInput(JSON.parse(JSON.stringify(courseSchedules[q].schedule)));
+
+            let tempSchedule = checkScheduleFit(testSchedule, classSchedule);
+
+            if (tempSchedule === -1) {
+                console.log("time conflict found: Course " + u + ", class: " + q);
+            } else {
+                console.log("no time conflict: Course " + classList[u] + ", class: " + q);
+                console.log("Temp: ");
+                console.log(tempSchedule);
+                testSchedule = tempSchedule;
+                // console.log(tempSchedule);
+
+                if (u === classList.length-1) {
+                    console.log("Schedule found");
+                    availSchedules.schedule.push(tempSchedule);
+                }
+                break;
+            }
+        }
+    }
+
+    console.log(availSchedules);
+
 }
-
-
-
-scheduleChecker();
+11
