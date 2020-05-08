@@ -26,6 +26,9 @@ function dayToIndex(day) {
 * Input format expected: "DAYHHMMHHMM,"
  */
 function parseScheduleInput(schedulerInput) {
+    if (schedulerInput === null || schedulerInput.length === 0)
+        return -1;
+
     /*
     * Create 2D array to hold classes for each day of the week
     * [dayOfTheWeek][startTime, endTime] || [dayOfTheWeek][startTime, endTime, startTime, endTime]
@@ -81,16 +84,20 @@ function scheduleOrderConcat(schedule, newClass) {
         let isArr2Depleted = index2 >= newClass.length;
 
         if (!isArr1Depleted && (isArr2Depleted || (schedule[index1][0] < newClass[index2][0]))) {
-            if (current > 0 && schedule[index1][0] < merged[current-1][1]) {
+            // Check for schedule conflict by comparing start time (index 0) of next entry to be added against
+            // the last meeting end time in the successfully merged array
+            if (current > 0 && schedule[index1][0] <= merged[current-1][1]) {
                 return -1;
             }
             merged[current] = [ schedule[index1][0], schedule[index1][1] ];
             index1++;
         } else {
-            if (current > 0 && newClass[index2][0] < merged[current-1][1]) {
+            // Check for schedule conflict by comparing start time (index 0) of next entry to be added against
+            // the last meeting end time in the successfully merged array
+            if (current > 0 && newClass[index2][0] <= merged[current-1][1]) {
                 return -1;
             }
-            merged[current] = [ newClass[index2][0], newClass[index2][1]];
+            merged[current] = [ newClass[index2][0], newClass[index2][1] ];
             index2++;
         }
 
@@ -107,25 +114,82 @@ function scheduleOrderConcat(schedule, newClass) {
  */
 function checkScheduleFit(schedule, newClass) {
     for (let day = 0 ; day < daysOfTheWeek; day++) {
-        // Check if newClass has any meeting times on day
+        // Check if newClass has any meeting times on specified day by checking length of meetingTime array for
+        // specified day
         if (newClass[day].length === 0) {
             continue; // Skip to the next day of the week
         }
 
-        schedule[day] = scheduleOrderConcat(schedule[day], newClass[day])
+        /*
+        * Call scheduleOrderConcat to check if newClass can be added to schedule without time conflict.
+        * If time conflict found return -1
+         */
+        schedule[day] = scheduleOrderConcat(schedule[day], newClass[day]);
         if (schedule[day] === -1)
+            // scheduleOrderConcat returned time conflict on specified day
+            // return -1 to indicate schedule could not be created
             return -1;
 
     }
     return schedule;
 }
 
+function checkClasses(data) {
+    let schedules = [];
+
+    for (let x = 0; x < data.length; x++) {
+        let checkClass = parseScheduleInput(data[x].schedule);
+        if (checkClass === -1)
+            continue;
+
+
+        let schedule = [];
+        for (let day = 0; day < 5; day++) {
+            schedule[day] = [];
+        }
+
+
+        schedule = checkScheduleFit(schedule, checkClass);
+        if (schedule !== -1) {
+            schedules.push(schedule);
+        }
+    }
+
+    console.log(schedules);
+
+}
+
 
 // TESTING
-let class1 = {schedule: parseScheduleInput("Mon08000900,Tue11001220,Thu11001220,"), instructor: "Sebastian"};
-let class2 = {schedule: parseScheduleInput("Mon11001220,Wed11001220,Fri08000900,"), instructor: "Tota"};
+var class1 = {schedule: parseScheduleInput("Mon08001200,Tue11001220,Thu11001220,"), instructor: "Sebastian"};
+var class2 = {schedule: parseScheduleInput("Mon11001220,Wed11001220,Fri08000900,"), instructor: "Tota"};
+var class3 = {schedule: parseScheduleInput("Mon12301400,Fri09101220,"), instructor: "Sebastian"};
+
+let classes =[class1, class2, class3];
 
 let testSchedule = {schedule: [], classes: []};
+for (let day = 0; day < 5; day++) {
+    testSchedule.schedule[day] = [];
+}
 
-class1.schedule = checkScheduleFit(class1.schedule, class2.schedule);
-console.log(class1.schedule);
+// testSchedule = checkScheduleFit(class1.schedule, class2.schedule);
+// testSchedule = checkScheduleFit(testSchedule, class3.schedule);
+
+let classList = ['cis1001', 'cis1166'];
+
+
+async function scheduleChecker() {
+    for (let u = 0; u < classList.length; u++) {
+        let classSchedule = await getClass(classList[u]);
+
+        console.log(classSchedule);
+        if (testSchedule.schedule === -1) {
+            console.log("No possible schedule could be made");
+        }
+
+    }
+}
+
+
+
+scheduleChecker();

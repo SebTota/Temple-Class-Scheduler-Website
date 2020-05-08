@@ -1,5 +1,5 @@
-const apiUrl = "https://temple.sebtota.com"
-const apiPort = "3000"
+const apiUrl = "https://temple.sebtota.com";
+const apiPort = "3000";
 
 //---API CALLS---//
 
@@ -19,6 +19,20 @@ function genClassArrStr(classes) {
 // Make an api call to return all weekSchedule of each course in array 'classes'
 async function getClasses(classes) {
     let apiCall = apiUrl + ":" + apiPort + "/classes?" + genClassArrStr(classes);
+
+    // Make api call and wait for response before returning
+    // Add CORS header to allow cross origin resource sharing
+    let response = await fetch(apiCall, {
+        mode: 'cors',
+        headers: {
+            'Access-Control-Allow-Origin':'*'
+        }
+    });
+    return await response.json();
+}
+
+async function getClass(className) {
+    let apiCall = apiUrl + ":" + apiPort + "/class/" + className;
 
     // Make api call and wait for response before returning
     // Add CORS header to allow cross origin resource sharing
