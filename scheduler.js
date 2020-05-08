@@ -64,7 +64,46 @@ function parseScheduleInput(schedulerInput) {
 }
 
 /*
-* Check if class can fit the current schedule without overlapping meeting times
+* Merge two schedules into a single merged array. If a new meeting time starts before the previously added meeting time
+* finished -1 is returned to indicate no schedule could be made.
+* O(n) time complexity
+ */
+function scheduleOrderConcat(schedule, newClass) {
+    // O(n) time & O(n) space
+    let merged = [];
+    let index1 = 0;
+    let index2 = 0;
+    let current = 0;
+
+    while (current < (schedule.length + newClass.length)) {
+
+        let isArr1Depleted = index1 >= schedule.length;
+        let isArr2Depleted = index2 >= newClass.length;
+
+        if (!isArr1Depleted && (isArr2Depleted || (schedule[index1][0] < newClass[index2][0]))) {
+            if (current > 0 && schedule[index1][0] < merged[current-1][1]) {
+                return -1;
+            }
+            merged[current] = [ schedule[index1][0], schedule[index1][1] ];
+            index1++;
+        } else {
+            if (current > 0 && newClass[index2][0] < merged[current-1][1]) {
+                return -1;
+            }
+            merged[current] = [ newClass[index2][0], newClass[index2][1]];
+            index2++;
+        }
+
+        current++;
+    }
+
+    return merged;
+}
+
+/*
+* Loop through each day of the week and check if newClass has any scheduled meeting times for that day of the week (indicated
+* by newClass[day].length being grater than 0). If newClass has scheduled meeting times during said day, check if the
+* class can be added ot the current schedule.
  */
 function checkScheduleFit(schedule, newClass) {
     for (let day = 0 ; day < daysOfTheWeek; day++) {
@@ -73,10 +112,12 @@ function checkScheduleFit(schedule, newClass) {
             continue; // Skip to the next day of the week
         }
 
-        console.log(schedule.concat(newClass));
+        schedule[day] = scheduleOrderConcat(schedule[day], newClass[day])
+        if (schedule[day] === -1)
+            return -1;
 
     }
-    return true;
+    return schedule;
 }
 
 
@@ -86,5 +127,5 @@ let class2 = {schedule: parseScheduleInput("Mon11001220,Wed11001220,Fri08000900,
 
 let testSchedule = {schedule: [], classes: []};
 
-
-console.log(class1.schedule[0].concat(class2.schedule[0]));
+class1.schedule = checkScheduleFit(class1.schedule, class2.schedule);
+console.log(class1.schedule);
