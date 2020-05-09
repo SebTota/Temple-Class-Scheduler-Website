@@ -54,7 +54,7 @@ document.getElementById('btnFindSchedules').addEventListener("click", function()
     classIn = classIn.replace(/\s/g, ""); // Remove all empty spaces from input
     var classes = classIn.split(","); // Tokenize classes based on ','
 
-    scheduleChecker(classes);
+    scheduleCheckerV2(classes);
     // getClasses(classes).then(data => console.log(data));
 
 });
