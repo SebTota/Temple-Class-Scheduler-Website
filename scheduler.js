@@ -1,4 +1,5 @@
 const daysOfTheWeek = 5; // Only Monday - Friday is supported
+let recCalls = 0;
 
 /*
 * Create a dynamic 2d array
@@ -196,7 +197,8 @@ async function scheduleChecker(classList) {
 }
 
 
-async function recCall(foundSchedules, classSchedules, currSchedule, classIndex) {
+async function recCall(availClasses, classSchedules, currSchedule, classIndex) {
+    recCalls++;
     let tempCurrSchedule = currSchedule;
 
     for (let section = 0; section < classSchedules[classIndex].length; section++) {
@@ -206,10 +208,10 @@ async function recCall(foundSchedules, classSchedules, currSchedule, classIndex)
         if (tempSchedule === -1) {
             continue;
         } else if (classIndex === classSchedules.length-1) {
-            foundSchedules.push(tempSchedule);
+            availClasses.schedule.push(tempSchedule);
         } else {
             let tempInd = classIndex + 1;
-            await recCall(foundSchedules, classSchedules, tempSchedule, tempInd);
+            await recCall(availClasses, classSchedules, tempSchedule, tempInd);
         }
     }
 }
@@ -233,9 +235,13 @@ async function scheduleCheckerV2(classList) {
 
         // Iterate through each section of a class
         for (let j = 0; j < courseSchedules.length; j++) {
-            let tempVal = parseScheduleInput(JSON.parse(JSON.stringify(courseSchedules[j].schedule)));
-            if (tempVal !== -1)
-                classSchedules[i][j] = tempVal;
+            let tempClass = JSON.parse(JSON.stringify(courseSchedules[j]));
+            let tempSchedule = parseScheduleInput(tempClass.schedule);
+
+            if (tempSchedule !== -1) {
+                classSchedules[i][j] = tempSchedule;
+                console.log(classSchedules[i][j]);
+            }
         }
         possibleSchedules *= courseSchedules.length;
     }
@@ -245,7 +251,8 @@ async function scheduleCheckerV2(classList) {
 
     let sch = [];
     create2dArray(sch, daysOfTheWeek);
-    await recCall(availSchedules.schedule, classSchedules, sch, 0);
+    await recCall(availSchedules, classSchedules, sch, 0);
 
     console.log(availSchedules.schedule);
+    console.log(recCalls);
 }
