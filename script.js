@@ -17,7 +17,7 @@ function genClassArrStr(classes) {
 }
 
 // Make an api call to return all weekSchedule of each course in array 'classes'
-async function getClasses(classes) {
+async function getClassesAPI(classes) {
     let apiCall = apiUrl + ":" + apiPort + "/classes?" + genClassArrStr(classes);
 
     // Make api call and wait for response before returning
@@ -31,7 +31,7 @@ async function getClasses(classes) {
     return await response.json();
 }
 
-async function getClass(className) {
+async function getClassAPI(className) {
     let apiCall = apiUrl + ":" + apiPort + "/class/" + className;
 
     // Make api call and wait for response before returning
@@ -51,10 +51,18 @@ async function getClass(className) {
 //---ACTION LISTENERS---//
 document.getElementById('btnFindSchedules').addEventListener("click", function() {
     var classIn = document.getElementById('classesInput').value; // Get class input data
+    if (classIn === "") {
+        return;
+    }
+
     classIn = classIn.replace(/\s/g, ""); // Remove all empty spaces from input
     var classes = classIn.split(","); // Tokenize classes based on ','
 
-    scheduleCheckerV2(classes);
+    getClasses(classes).then(data => {
+        if(data !== undefined) {
+            scheduleChecker(data);
+        }
+    });
     // getClasses(classes).then(data => console.log(data));
 
 });

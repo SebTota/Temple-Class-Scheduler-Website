@@ -1,5 +1,6 @@
 const daysOfTheWeek = 5; // Only Monday - Friday is supported
-let recCalls = 0;
+let availSchedules = {schedule: [], classes: []};
+
 
 /*
 * Create a dynamic 2d array
@@ -32,6 +33,7 @@ function dayToIndex(day) {
     }
 }
 
+
 /*
 * Return a 2D array of meeting times (schedule) for a particular class.
 * Input format expected: "DAYHHMMHHMM,"
@@ -48,9 +50,7 @@ function parseScheduleInput(schedulerInput) {
      */
 
     let weekSchedule = [];
-    for (let day = 0; day < 5; day++) {
-        weekSchedule[day] = [];
-    }
+    create2dArray(weekSchedule, daysOfTheWeek);
 
     /*
     * Input string is split into sections of size 12 (including the separating comma)
@@ -76,6 +76,7 @@ function parseScheduleInput(schedulerInput) {
 
     return weekSchedule;
 }
+
 
 /*
 * Merge two schedules into a single merged array. If a new meeting time starts before the previously added meeting time
@@ -118,6 +119,7 @@ function scheduleOrderConcat(schedule, newClass) {
     return merged;
 }
 
+
 /*
 * Loop through each day of the week and check if newClass has any scheduled meeting times for that day of the week (indicated
 * by newClass[day].length being grater than 0). If newClass has scheduled meeting times during said day, check if the
@@ -125,9 +127,7 @@ function scheduleOrderConcat(schedule, newClass) {
  */
 function checkScheduleFit(schedule, newClass) {
     let tempSchedule = [];
-    for (let day = 0; day < 5; day++) {
-        tempSchedule[day] = [];
-    }
+    create2dArray(tempSchedule, daysOfTheWeek);
 
     for (let day = 0 ; day < daysOfTheWeek; day++) {
         if (newClass[day].length === 0 && schedule[day].length === 0) {
@@ -150,54 +150,23 @@ function checkScheduleFit(schedule, newClass) {
 }
 
 
-// TESTING
-var class1 = {schedule: parseScheduleInput("Mon08001200,Tue11001220,Thu11001220,"), instructor: "Sebastian"};
-var class2 = {schedule: parseScheduleInput("Mon11001220,Wed11001220,Fri08000900,"), instructor: "Tota"};
-var class3 = {schedule: parseScheduleInput("Mon12301400,Fri09101220,"), instructor: "Sebastian"};
+async function getClasses(userClassList) {
+    let classListAPIReturn = [];
 
-let classes =[class1, class2, class3];
-
-let availSchedules = {schedule: [], classes: []};
-
-// testSchedule = checkScheduleFit(class1.schedule, class2.schedule);
-// testSchedule = checkScheduleFit(testSchedule, class3.schedule);
-
-// let classList = ['cis1001', 'cis1166', 'acct2101'];
-
-
-async function scheduleChecker(classList) {
-    let testSchedule = [];
-    create2dArray(testSchedule, daysOfTheWeek);
-
-
-    for (let u = 0; u < classList.length; u++) {
-        let courseSchedules = await getClass(classList[u]);
-
-        for (let q = 0; q < courseSchedules.length; q++) {
-            let classSchedule = parseScheduleInput(JSON.parse(JSON.stringify(courseSchedules[q].schedule)));
-            let tempSchedule = checkScheduleFit(testSchedule, classSchedule);
-
-            if (tempSchedule === -1) {
-                console.log("time conflict found: Course " + classList[u] + ", class: " + q);
-            } else {
-                console.log("no time conflict: Course " + classList[u] + ", class: " + q);
-                testSchedule = tempSchedule;
-
-                // Schedule found that fits all classes
-                if (u === classList.length-1) {
-                    console.log("Schedule found");
-                    availSchedules.schedule.push(tempSchedule);
-                }
-                break;
-            }
-        }
+    //--- Receive and parse data---//
+    // Iterate through each class in class list to get all all the schedules for each course
+    for (let i = 0; i < userClassList.length; i++) {
+        let courseSchedules = await getClassAPI(userClassList[i]);
+        if (courseSchedules === "Class Does Not Exist")
+            return;
+        classListAPIReturn.push(courseSchedules);
     }
 
-    console.log(availSchedules);
+    return classListAPIReturn;
 }
 
 
-async function recCall(availClasses, classList, currSchedule, currClasses, classIndex) {
+function findScheduleRec(availClasses, classList, currSchedule, currClasses, classIndex) {
     for (let section = 0; section < classList[classIndex].length; section++) {
         let tempSchedule = checkScheduleFit(currSchedule, classList[classIndex][section].schedule);
 
@@ -210,25 +179,26 @@ async function recCall(availClasses, classList, currSchedule, currClasses, class
                 availClasses.classes.push(tempCurrClass);
             } else {
                 let tempInd = classIndex + 1;
-                await recCall(availClasses, classList, tempSchedule, tempCurrClass, tempInd);
+                findScheduleRec(availClasses, classList, tempSchedule, tempCurrClass, tempInd);
             }
         }
     }
 }
 
+
 /*
 * Thanks to Ryan O'Connor for help with the scheduling algorithm.
 * https://github.com/ryan-SWE
  */
-async function scheduleCheckerV2(userClassList) {
-    let possibleSchedules = 1; // Hold the total number of possible schedules that can be made
+function scheduleChecker(classObjects) {
     let classList = [];
-    create2dArray(classList, userClassList.length);
+    create2dArray(classList, classObjects.length);
 
     //--- Receive and parse data---//
     // Iterate through each class in class list to get all all the schedules for each course
-    for (let i = 0; i < userClassList.length; i++) {
-        let courseSchedules = await getClass(userClassList[i]);
+    for (let i = 0; i < classObjects.length; i++) {
+        let courseSchedules = classObjects[i];
+
 
         // Iterate through each section of a class
         for (let j = 0; j < courseSchedules.length; j++) {
@@ -247,20 +217,14 @@ async function scheduleCheckerV2(userClassList) {
                 classList[i][j] = tempClass;
             }
         }
-        // Count the number of total possible schedules
-        possibleSchedules *= courseSchedules.length;
     }
-
-    // Print out all courses and their sections
-    // console.log(classList);
     //--- ---//
 
     let startSchedule = [];
     create2dArray(startSchedule, daysOfTheWeek);
     let startClasses = [];
 
-    await recCall(availSchedules, classList, startSchedule, startClasses,0);
+    findScheduleRec(availSchedules, classList, startSchedule, startClasses,0);
 
     console.log(availSchedules.classes);
-    console.log(recCalls);
 }
