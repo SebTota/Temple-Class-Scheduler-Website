@@ -1,10 +1,11 @@
-// Create a reference to an empty calendar
-const old_html = $("#calendar-content").html();
+const old_html = $("#calendar-content").html(); // Create a reference to an empty calendar
 const numDaysInWeek = 5; // Only Monday - Friday is supported
 
-let currSchIndex = 0;
-let numAvailSchedules = -1;
+// Global variables
+let currSchIndex = 0; // Current schedule index out of all possible schedules
+let numAvailSchedules = -1; // Number of possible schedules found
 let availSchedules = {schedule: [], classes: []};
+
 
 /*
 * Create a dynamic 2d array
@@ -38,6 +39,10 @@ function dayToIndex(day) {
 }
 
 
+/*
+* Return the day of the week in text based on index (0 - Monday, 4 - Friday)
+* Note: Only works with Monday -> Friday
+ */
 function indexToDay(index){
     switch(index) {
         case 0:
@@ -50,6 +55,8 @@ function indexToDay(index){
             return "thursday";
         case 4:
             return "friday";
+        default:
+            return null;
     }
 }
 
@@ -185,26 +192,35 @@ async function getClasses(userClassList) {
     return classListAPIReturn;
 }
 
-
+/*
+* Recursive function call used to traverse through each course, then each section of said course.
+ */
 function findScheduleRec(availClasses, classList, currSchedule, currClasses, classIndex) {
     for (let section = 0; section < classList[classIndex].length; section++) {
         let tempSchedule = checkScheduleFit(currSchedule, classList[classIndex][section].schedule);
 
         if (tempSchedule !== -1) {
+            /*
+            * Copy array currClasses into tempCurrClasses to test if adding the new class would result in schedule
+            * interference. Use slice() method to create a copy of the array instead of making a reference to
+            * currClasses.
+             */
             let tempCurrClass = currClasses.slice();
             tempCurrClass.push(classList[classIndex][section]);
 
             if (classIndex === classList.length-1) {
+                // End of successful recursion so add the possible schedule, along with the classes that made up
+                // said schedule.
                 availClasses.schedule.push(tempSchedule);
                 availClasses.classes.push(tempCurrClass);
             } else {
+                // Not at the end of a recursive algo. Keep testing.
                 let tempInd = classIndex + 1;
                 findScheduleRec(availClasses, classList, tempSchedule, tempCurrClass, tempInd);
             }
         }
     }
 }
-
 
 
 /*
@@ -241,16 +257,17 @@ function scheduleChecker(classObjects) {
     }
     //--- ---//
 
+    // Starting placeholder variables
     let startSchedule = [];
     create2dArray(startSchedule, numDaysInWeek);
     let startClasses = [];
 
+    /*
+    * Begin recursive algorithm for class search.
+    * All possible schedules will be saved to availSchedules.schedules,
+    * with the corresponding class objects (including the schedules) being stored in availSchedules.classes
+     */
     findScheduleRec(availSchedules, classList, startSchedule, startClasses,0);
-
-    numAvailSchedules = availSchedules.classes.length;
-    console.log(availSchedules.classes);
-
-    genScheduleEvents(availSchedules, currSchIndex);
+    numAvailSchedules = availSchedules.classes.length; // Set to number of possible schedules found
+    genScheduleEvents(availSchedules, currSchIndex); // Update webpage schedule to represent first possible schedule
 }
-
-

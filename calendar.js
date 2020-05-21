@@ -1,6 +1,11 @@
+/*
+* Update the index of which schedule you are looking at out of all the possible schedules.
+ */
 function updateSchPageIndex() {
+    // Set current index
     document.getElementById("schedule_index_label_0").textContent = (currSchIndex + 1).toString();
 
+    // Set total number of schedule possibilities index
     if (numAvailSchedules === -1) {
         document.getElementById("schedule_index_label_1").textContent = "0";
     } else {
@@ -8,14 +13,17 @@ function updateSchPageIndex() {
     }
 }
 
-function newEvent(title, crn, startTime, endTime) {
+/*
+* Create a new schedule event based on information of the class.
+ */
+function newEvent(title, courseNum, startTime, endTime) {
     let event = document.createElement("li");
     event.classList.add("cd-schedule__event");
 
     let eventData = document.createElement("a");
     eventData.setAttribute("data-start", startTime);
     eventData.setAttribute("data-end", endTime);
-    eventData.setAttribute("data-event", "event-" + crn);
+    eventData.setAttribute("data-event", "event-" + courseNum);
     eventData.style.padding = "10px";
 
     let eventTitle = document.createElement("em");
@@ -29,6 +37,7 @@ function newEvent(title, crn, startTime, endTime) {
 
     return event;
 }
+
 
 /*
 Convert class start and end time to a format the html scheduler will understand by converting int to
@@ -61,24 +70,32 @@ function scheduleTimeFormatting(classStartInt, classEndInt) {
     return [classStartStr, classEndStr];
 }
 
+
+/*
+* Generate all schedule events for the specified index of all possible schedules.
+ */
 function genScheduleEvents(availSchedules, scheduleIndex) {
-    $("#calendar-content").html(old_html);
+    $("#calendar-content").html(old_html); // Reset the schedule to include no courses
 
-    for (let course = 0; course < availSchedules.classes[scheduleIndex].length; course++) {
 
-        for (let day = 0; day < numDaysInWeek; day++) {
-            for (let sch = 0; sch < availSchedules.classes[scheduleIndex][course].schedule[day].length; sch++) {
+    for (let course = 0; course < availSchedules.classes[scheduleIndex].length; course++) { // Each course
+        for (let day = 0; day < numDaysInWeek; day++) { // Each day of the week
+            for (let sch = 0; sch < availSchedules.classes[scheduleIndex][course].schedule[day].length; sch++) { // Each start/end pair for that specific day
                 let title = availSchedules.classes[scheduleIndex][course].title;
                 let crn = (course + 1).toString();
 
+                /*
+                * Find the start and end time (ensuring a HH:MM format to preserve future functions)
+                 */
                 let classSchIntArr = availSchedules.classes[scheduleIndex][course].schedule[day][sch];
                 let classTimeStr = scheduleTimeFormatting(classSchIntArr[0], classSchIntArr[1]);
 
+                // Create new event based on given info
                 newEvent(document.getElementById("events-" + indexToDay(day)).appendChild(newEvent(title, crn, classTimeStr[0], classTimeStr[1])));
             }
         }
     }
 
-    scheduleCall();
+    scheduleCall(); // Generate CSS for each new event
     console.log("complete");
 }

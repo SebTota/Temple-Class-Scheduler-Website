@@ -77,6 +77,7 @@ document.getElementById('btnFindSchedules').addEventListener("click", function()
 document.getElementById("button_back").addEventListener("click", function(){
     if (numAvailSchedules === -1) return; // No schedule created yet
 
+    // Only decrement schedule counter if currSchIndex (current schedule index) is positive
     if (currSchIndex >= 1) --currSchIndex;
     updateSchPageIndex();
     genScheduleEvents(availSchedules, currSchIndex % numAvailSchedules);
