@@ -1,30 +1,10 @@
 // Create a reference to an empty calendar
-var old_html = $("#calendar-content").html();
-
+const old_html = $("#calendar-content").html();
 const numDaysInWeek = 5; // Only Monday - Friday is supported
+
+let currSchIndex = 0;
+let numAvailSchedules = -1;
 let availSchedules = {schedule: [], classes: []};
-
-
-// Create
-function newEvent(title, crn, startTime, endTime) {
-    let event = document.createElement("li");
-    event.classList.add("cd-schedule__event");
-
-    let eventData = document.createElement("a");
-    eventData.setAttribute("data-start", startTime);
-    eventData.setAttribute("data-end", endTime);
-    eventData.setAttribute("data-event", "event-4");
-
-    let eventTitle = document.createElement("em");
-    eventTitle.classList.add("cd-schedule__name");
-    eventTitle.textContent = title;
-
-    eventData.appendChild(eventTitle);
-    event.appendChild(eventData);
-
-    return event;
-}
-
 
 /*
 * Create a dynamic 2d array
@@ -227,7 +207,6 @@ function findScheduleRec(availClasses, classList, currSchedule, currClasses, cla
 
 
 
-
 /*
 * Thanks to Ryan O'Connor for help with the scheduling algorithm.
 * https://github.com/ryan-SWE
@@ -268,21 +247,10 @@ function scheduleChecker(classObjects) {
 
     findScheduleRec(availSchedules, classList, startSchedule, startClasses,0);
 
+    numAvailSchedules = availSchedules.classes.length;
     console.log(availSchedules.classes);
 
-    $("#calendar-content").html(old_html);
-
-    for (let course = 0; course < availSchedules.classes[0].length; course++) {
-
-        for (let day = 0; day < numDaysInWeek; day++) {
-            for (let sch = 0; sch < availSchedules.classes[0][course].schedule[day].length; sch++) {
-                let title = availSchedules.classes[0][course].title;
-                let crn = course;
-                let startTime = availSchedules.classes[0][course].schedule[day][sch][0].toString().substring(0,2) + ":" + availSchedules.classes[0][course].schedule[day][sch][0].toString().substring(2,4);
-                let endTime = availSchedules.classes[0][course].schedule[day][sch][1].toString().substring(0,2) + ":" + availSchedules.classes[0][course].schedule[day][sch][1].toString().substring(2,4);
-                newEvent(document.getElementById("events-" + indexToDay(day)).appendChild(newEvent(title, crn, startTime, endTime)));
-            }
-        }
-    }
-    scheduleCall();
+    genScheduleEvents(availSchedules, currSchIndex);
 }
+
+

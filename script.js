@@ -50,6 +50,11 @@ async function getClassAPI(className) {
 
 //---ACTION LISTENERS---//
 document.getElementById('btnFindSchedules').addEventListener("click", function() {
+    // Reset schedule if making a new schedule request
+    currSchIndex = 0;
+    numAvailSchedules = -1;
+    availSchedules = {schedule: [], classes: []};
+
     var classIn = document.getElementById('classesInput').value; // Get class input data
     if (classIn === "") {
         return;
@@ -61,9 +66,27 @@ document.getElementById('btnFindSchedules').addEventListener("click", function()
     getClasses(classes).then(data => {
         if(data !== undefined) {
             scheduleChecker(data);
+            updateSchPageIndex();
         }
     });
     // getClasses(classes).then(data => console.log(data));
 
+});
+
+// Schedule left and right buttons
+document.getElementById("button_back").addEventListener("click", function(){
+    if (numAvailSchedules === -1) return; // No schedule created yet
+
+    if (currSchIndex >= 1) --currSchIndex;
+    updateSchPageIndex();
+    genScheduleEvents(availSchedules, currSchIndex % numAvailSchedules);
+});
+
+document.getElementById("button_forward").addEventListener("click", function(){
+    if (numAvailSchedules === -1) return; // No schedule created yet
+
+    currSchIndex = ++currSchIndex % numAvailSchedules;
+    updateSchPageIndex();
+    genScheduleEvents(availSchedules, currSchIndex);
 });
 //---END ACTION LISTENERS---//
