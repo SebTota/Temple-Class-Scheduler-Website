@@ -1,35 +1,133 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Temple Class Scheduler</title>
-
-    <style>
-        html, body {
-            height: 100%;
-            margin: 10px;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>document.getElementsByTagName("html")[0].className += " js";</script>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <title>Schedule Template | CodyHouse</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
+
+<h1 style="text-align: center;">Temple Class Scheduler</h1>
 <div style="height: 100%;">
-    <h1 style="text-align: center;">Temple Class Scheduler</h1>
-    <div style="height: 100%;">
-        <p>Enter all classes you need to take this semester separated by commas. </p>
-        <p>Ex. "CIS1001, CIS1002, MATH1001, PHY0800"</p>
-        <input id="classesInput">
-        <button id="btnFindSchedules">Find Schedules</button>
+    <p>Enter all classes you need to take this semester separated by commas. </p>
+    <p>Ex. "CIS1001, CIS1002, MATH1001, PHY0800"</p>
+    <input id="classesInput">
+    <button id="btnFindSchedules">Find Schedules</button>
+</div>
 
-        <div id="calendar" style="width: 50%; margin-top: 20px; height: 50%;"></div>
+<div id="calendar-content">
+    <div>
+<div class="cd-schedule cd-schedule--loading margin-top-lg margin-bottom-lg js-cd-schedule">
+    <div class="cd-schedule__timeline">
+        <ul>
+            <li><span>08:00</span></li>
+            <li><span>08:30</span></li>
+            <li><span>09:00</span></li>
+            <li><span>09:30</span></li>
+            <li><span>10:00</span></li>
+            <li><span>10:30</span></li>
+            <li><span>11:00</span></li>
+            <li><span>11:30</span></li>
+            <li><span>12:00</span></li>
+            <li><span>12:30</span></li>
+            <li><span>01:00</span></li>
+            <li><span>01:30</span></li>
+            <li><span>02:00</span></li>
+            <li><span>02:30</span></li>
+            <li><span>03:00</span></li>
+            <li><span>03:30</span></li>
+            <li><span>04:00</span></li>
+            <li><span>04:30</span></li>
+            <li><span>05:00</span></li>
+            <li><span>05:30</span></li>
+            <li><span>06:00</span></li>
+            <li><span>06:30</span></li>
+            <li><span>07:00</span></li>
+            <li><span>07:30</span></li>
+            <li><span>08:00</span></li>
+            <li><span>08:30</span></li>
+            <li><span>09:00</span></li>
+            <li><span>09:30</span></li>
+            <li><span>10:00</span></li>
 
 
-        <script src="script.js"></script>
-        <script src="scheduler.js"></script>
-        <script>document.getElementById("calendar").innerHTML='<object type="text/html" data="calendar.html" style="width:100%; height:100%;"></object>';</script>
-        <script>document.getElementById("classesInput").value = "cis3223, cis4345, cis3515, cis3296"</script>
+        </ul>
+    </div> <!-- .cd-schedule__timeline -->
+
+    <div class="cd-schedule__events">
+        <ul>
+            <li class="cd-schedule__group">
+                <div class="cd-schedule__top-info"><span>Monday</span></div>
+
+                <ul id="events-monday">
+                </ul>
+            </li>
+
+            <li class="cd-schedule__group">
+                <div class="cd-schedule__top-info"><span>Tuesday</span></div>
+
+                <ul id="events-tuesday">
+                </ul>
+            </li>
+
+            <li class="cd-schedule__group">
+                <div class="cd-schedule__top-info"><span>Wednesday</span></div>
+
+                <ul id="events-wednesday">
+                </ul>
+            </li>
+
+            <li class="cd-schedule__group">
+                <div class="cd-schedule__top-info"><span>Thursday</span></div>
+
+                <ul id="events-thursday">
+                </ul>
+            </li>
+
+            <li class="cd-schedule__group">
+                <div class="cd-schedule__top-info"><span>Friday</span></div>
+
+                <ul id="events-friday">
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="cd-schedule-modal">
+        <header class="cd-schedule-modal__header">
+            <div class="cd-schedule-modal__content">
+                <span class="cd-schedule-modal__date"></span>
+                <h3 class="cd-schedule-modal__name"></h3>
+            </div>
+
+            <div class="cd-schedule-modal__header-bg"></div>
+        </header>
+
+        <div class="cd-schedule-modal__body">
+            <div class="cd-schedule-modal__event-info"></div>
+            <div class="cd-schedule-modal__body-bg"></div>
+        </div>
+
+        <a href="#0" class="cd-schedule-modal__close text-replace">Close</a>
 
     </div>
+
+    <div class="cd-schedule__cover-layer"></div>
+</div> <!-- .cd-schedule -->
+    </div>
 </div>
+
+<script src="scheduler.js"></script>
+<script src="assets/js/util.js"></script> <!-- util functions included in the CodyHouse framework -->
+<script src="assets/js/main.js"></script>
+
+
+<script src="script.js"></script>
+
+<script>document.getElementById("classesInput").value = "cis3223, cis4345, cis3515, cis3296"</script>
 
 </body>
 </html>
