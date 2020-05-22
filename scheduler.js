@@ -204,6 +204,7 @@ async function getClasses(userClassList) {
  */
 function findScheduleRec(availClasses, classList, currSchedule, currClasses, classIndex) {
     for (let section = 0; section < classList[classIndex].length; section++) {
+        classList[classIndex][section].title = classList[classIndex][section].title.replace("&amp;", "&");
         let tempSchedule = checkScheduleFit(currSchedule, classList[classIndex][section].schedule);
 
         if (tempSchedule !== -1) {

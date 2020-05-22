@@ -27,10 +27,10 @@ function newEvent(title, eventNum, startTime, endTime) {
     eventData.style.padding = "10px";
 
     let eventTitle = document.createElement("em");
-    eventTitle.classList.add("cd-schedule__name");
+    eventTitle.classList.add("event-schedule-list-block");
+    //eventTitle.classList.add("cd-schedule__name");
     eventTitle.textContent = title;
-    eventTitle.style.fontSize = "15px";
-    eventTitle.style.padding = "0px";
+
 
     eventData.appendChild(eventTitle);
     event.appendChild(eventData);

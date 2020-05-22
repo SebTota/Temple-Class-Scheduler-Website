@@ -34,12 +34,19 @@
         }
 
         @media screen and (max-height: 900px) {
-            #example-input-label {
+            .example-input-label {
                 display: none !important;
             }
             #input-size {
                 height: auto !important;
             }
+        }
+
+        .event-schedule-list-block {
+            font-size: 15px;
+            color: white;
+            padding: 0;
+            overflow: hidden !important;
         }
 
         .center {
@@ -89,7 +96,8 @@
     <div class="header text-center">
         <h1>Temple Class Scheduler</h1>
         <p>Enter all classes you need to take this semester (upto 9 total classes) separated by commas, then cycle through all the possible schedules using the left and right arrows.</p>
-        <p id="example-input-label">Ex. "CIS3223, CIS4345, CIS3515, CIS3296"</p>
+        <p class="example-input-label">Some schedules may look the same but will have different instructors.</p>
+        <p class="example-input-label">Ex. "CIS3223, CIS4345, CIS3515, CIS3296"</p>
 
         <form action="javascript:classSubmit()">
             <label for="classesInput">Classes:</label>
