@@ -49,7 +49,7 @@ async function getClassAPI(className) {
 
 
 //---ACTION LISTENERS---//
-document.getElementById('btnFindSchedules').addEventListener("click", function() {
+function classSubmit() {
     // Reset schedule if making a new schedule request
     currSchIndex = 0;
     numAvailSchedules = -1;
@@ -70,8 +70,7 @@ document.getElementById('btnFindSchedules').addEventListener("click", function()
         }
     });
     // getClasses(classes).then(data => console.log(data));
-
-});
+}
 
 // Schedule left and right buttons
 document.getElementById("button_back").addEventListener("click", function(){

@@ -28,6 +28,18 @@
             #calendar-content {
                 width: 100% !important;
             }
+            #classesInput {
+                width:40% !important;
+            }
+        }
+
+        @media screen and (max-height: 900px) {
+            #example-input-label {
+                display: none !important;
+            }
+            #input-size {
+                height: auto !important;
+            }
         }
 
         .center {
@@ -73,19 +85,23 @@
 
 
 
-<div style="height:20vh;">
-    <h1 style="text-align: center;">Temple Class Scheduler</h1>
-    <div style="height: 100%;">
-        <p></p>
+<div id="input-size" style="height:20vh; overflow-y: scroll;">
+    <div class="header text-center">
+        <h1>Temple Class Scheduler</h1>
         <p>Enter all classes you need to take this semester (upto 9 total classes) separated by commas, then cycle through all the possible schedules using the left and right arrows.</p>
-        <p>Ex. "CIS1001, CIS1002, MATH1001, PHY0800"</p>
-        <input id="classesInput">
-        <button id="btnFindSchedules">Find Schedules</button>
+        <p id="example-input-label">Ex. "CIS3223, CIS4345, CIS3515, CIS3296"</p>
+
+        <form action="javascript:classSubmit()">
+            <label for="classesInput">Classes:</label>
+            <input type="text" id="classesInput" style="width:20%;">
+            <button type="submit" id="btnFindSchedules">Find Schedules</button>
+        </form>
+
     </div>
 </div>
 
 
-<div style="height:80vh;">
+<div id="calendar-size" style="height:80vh;">
     <div class="center">
         <div class="center" style="width: 300px; height: 10%;">
             <button id="button_back" class="sch_button"> < </button>

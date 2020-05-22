@@ -39,13 +39,16 @@ function newEvent(title, eventNum, startTime, endTime) {
 }
 
 
+/*
+* Create a new HTML element that holds all the information about a specific class for the schedule class list
+ */
 function newListItem(courseObj, eventNum) {
     let item = document.createElement("li");
     item.classList.add("list-group-item");
     item.classList.add("list_event_" + eventNum);
 
     let title = document.createElement("p");
-    title.textContent = courseObj.title + "     " + courseObj.crn;
+    title.textContent = courseObj.title + " " + courseObj.crn;
     let prof = document.createElement("p");
     prof.textContent = courseObj.instructor;
 
