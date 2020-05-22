@@ -88,6 +88,12 @@ function parseScheduleInput(schedulerInput) {
         // Hold the current substring to be parsed   ex. "Tue11001220"
         let scheduleString = schedulerInput.substring(i, i+11);
 
+
+        if (scheduleString === "online") {
+            continue;
+        }
+
+
         // Parse starting and ending times from string and convert to integer
         let classStart = parseInt(scheduleString.substring(3, 7), 10);
         let classEnd = parseInt(scheduleString.substring(7, 11), 10);

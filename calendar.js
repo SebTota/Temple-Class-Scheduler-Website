@@ -40,7 +40,6 @@ function newEvent(title, eventNum, startTime, endTime) {
 
 
 function newListItem(courseObj, eventNum) {
-    console.log(courseObj);
     let item = document.createElement("li");
     item.classList.add("list-group-item");
     item.classList.add("list_event_" + eventNum);
@@ -116,5 +115,4 @@ function genScheduleEvents(availSchedules, scheduleIndex) {
     }
 
     scheduleCall(); // Generate CSS for each new event
-    console.log("complete");
 }
