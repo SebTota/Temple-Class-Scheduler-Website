@@ -945,7 +945,6 @@ svg {
 
 body {
     font-size: 1em;
-    font-size: var(--text-base-size, 1em);
     font-family: 'Source Sans Pro', sans-serif;
     font-family: var(--font-primary, sans-serif);
     color: hsl(240, 4%, 20%);

@@ -1,4 +1,5 @@
-const old_html = $("#calendar-content").html(); // Create a reference to an empty calendar
+const empty_calendar = $("#calendar-content").html(); // Create a reference to an empty calendar
+const empty_calendar_class_list = $("#class-event-list").html();
 const numDaysInWeek = 5; // Only Monday - Friday is supported
 
 // Global variables

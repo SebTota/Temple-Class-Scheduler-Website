@@ -6,9 +6,30 @@
     <script>document.getElementsByTagName("html")[0].className += " js";</script>
     <link rel="stylesheet" href="assets/css/style.css">
     <title>Temple Class Scheduler</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+
 
     <style>
+        .class-list {
+            height:90%;
+            width: 25%;
+            overflow-y: scroll;
+            margin-left: 75%;
+            color: white;
+        }
+
+        @media screen and (max-width: 1300px) {
+            .class-list {
+                display: none !important;
+            }
+            #calendar-content {
+                width: 100% !important;
+            }
+        }
+
         .center {
             margin: auto;
             width: 50%;
@@ -18,15 +39,47 @@
         .sch_button {
             width: 60px;
         }
+
+
+
+        .list_event_1 {
+            background: hsl(199, 25%, 46%);
+        }
+        .list_event_2 {
+            background: hsl(271, 23%, 26%);
+        }
+        .list_event_3 {
+            background: hsl(162, 14%, 68%);
+        }
+        .list_event_4 {
+            background: hsl(31, 89%, 68%)
+        }
+        .list_event_5 {
+            background: hsl(320, 45%, 39%);
+        }
+        .list_event_6 {
+            background: hsl(56, 45%, 39%);
+        }
+        .list_event_7 {
+            background: hsl(140, 64%, 33%);
+        }
+        .list_event_8 {
+            background: hsl(260, 90%, 51%);
+        }
+        .list_event_9 {
+            background: hsl(58, 26%, 53%);
+        }
     </style>
 </head>
 <body>
+
+
 
 <div style="height:20vh;">
     <h1 style="text-align: center;">Temple Class Scheduler</h1>
     <div style="height: 100%;">
         <p></p>
-        <p>Enter all classes you need to take this semester separated by commas, then cycle through all the possible schedules using the left and right arrows.</p>
+        <p>Enter all classes you need to take this semester (upto 9 total classes) separated by commas, then cycle through all the possible schedules using the left and right arrows.</p>
         <p>Ex. "CIS1001, CIS1002, MATH1001, PHY0800"</p>
         <input id="classesInput">
         <button id="btnFindSchedules">Find Schedules</button>
@@ -46,7 +99,7 @@
     </div>
 
 
-    <div id="calendar-content" style="height:90%; overflow-y: scroll;">
+    <div id="calendar-content" style="height:90%; overflow-y: scroll; width: 75%; float:left;">
         <div>
             <div class="cd-schedule cd-schedule--loading margin-top-lg margin-bottom-lg js-cd-schedule" style="margin-top: 0px;">
                 <div class="cd-schedule__timeline">
@@ -146,6 +199,11 @@
                 <div class="cd-schedule__cover-layer"></div>
             </div> <!-- .cd-schedule -->
         </div>
+    </div>
+    <div id="list-content" class="class-list">
+        <ul id="class-event-list" class="list-group list-group-horizontal">
+
+        </ul>
     </div>
 </div>
 
