@@ -192,7 +192,7 @@ async function getClasses(userClassList) {
     for (let i = 0; i < userClassList.length; i++) {
         let courseSchedules = await getClassAPI(userClassList[i]);
         if (courseSchedules === "Class Does Not Exist")
-            return;
+            return userClassList[i];
         classListAPIReturn.push(courseSchedules);
     }
 

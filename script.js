@@ -48,8 +48,17 @@ async function getClassAPI(className) {
 //---END OF API CALLS---//
 
 
+function badInput(classError){
+    document.getElementById("classesInput").style.borderColor = "red";
+    document.getElementsByClassName("example-input-label")[1].textContent = "Error on class: " + classError;
+}
+
+
 //---ACTION LISTENERS---//
 function classSubmit() {
+    document.getElementsByClassName("example-input-label")[1].textContent = 'Ex. "CIS3223, CIS4345, CIS3515, CIS3296"';
+    document.getElementById("classesInput").style.borderColor = "black";
+
     // Reset schedule if making a new schedule request
     currSchIndex = 0;
     numAvailSchedules = -1;
@@ -64,9 +73,12 @@ function classSubmit() {
     var classes = classIn.split(","); // Tokenize classes based on ','
 
     getClasses(classes).then(data => {
-        if(data !== undefined) {
+        if(typeof data !== "string") {
             scheduleChecker(data);
             updateSchPageIndex();
+        } else {
+            console.log("Error in class");
+            badInput(data);
         }
     });
     // getClasses(classes).then(data => console.log(data));
