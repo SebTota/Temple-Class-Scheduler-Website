@@ -22,6 +22,9 @@
         }
 
         @media screen and (max-width: 1300px) {
+            #input-size {
+                height: auto !important;
+            }
             .class-list {
                 display: none !important;
             }
@@ -33,12 +36,15 @@
             }
         }
 
-        @media screen and (max-height: 900px) {
+        @media screen and (max-height: 900px), (max-width: 550px) {
             .example-input-label {
                 display: none !important;
             }
             #input-size {
                 height: auto !important;
+            }
+            #title-header {
+                font-size: 25px;
             }
         }
 
@@ -92,10 +98,10 @@
 
 
 
-<div id="input-size" style="height:20vh; overflow-y: scroll;">
+<div id="input-size" style="height:20vh;">
     <div class="header text-center">
-        <h1>Temple Class Scheduler</h1>
-        <p>Enter all classes you need to take this semester (upto 9 total classes) separated by commas, then cycle through all the possible schedules using the left and right arrows.</p>
+        <h1 id="title-header">Temple Class Scheduler</h1>
+        <p id="instructions_1">Enter all classes you need to take this semester (upto 9 total classes) separated by commas, then cycle through all the possible schedules using the left and right arrows.</p>
         <p class="example-input-label">Some schedules may look the same but will have different instructors.</p>
         <p class="example-input-label">Ex. "CIS3223, CIS4345, CIS3515, CIS3296"</p>
 

@@ -18,6 +18,7 @@ function updateSchPageIndex() {
  */
 function newEvent(title, eventNum, startTime, endTime) {
     let event = document.createElement("li");
+    event.setAttribute("start_time", startTime);
     event.classList.add("cd-schedule__event");
 
     let eventData = document.createElement("a");
@@ -28,14 +29,25 @@ function newEvent(title, eventNum, startTime, endTime) {
 
     let eventTitle = document.createElement("em");
     eventTitle.classList.add("event-schedule-list-block");
-    //eventTitle.classList.add("cd-schedule__name");
     eventTitle.textContent = title;
-
 
     eventData.appendChild(eventTitle);
     event.appendChild(eventData);
 
     return event;
+}
+
+
+function addNewEventCal(title, day, eventNum, classTimeStr) {
+    let dayElem = document.getElementById("events-" + indexToDay(day));
+    let newElem = newEvent(title, eventNum, classTimeStr[0], classTimeStr[1]);
+    dayElem.appendChild(newElem);
+
+    let childNum = dayElem.children.length - 2;
+    while (childNum >= 0 && parseInt(newElem.getAttribute("start_time").replace(":", ""), 10) < parseInt(dayElem.children[childNum].getAttribute("start_time").replace(":", ""), 10)) {
+        dayElem.insertBefore(newElem, dayElem.children[childNum]);
+        childNum--;
+    }
 }
 
 
@@ -112,7 +124,7 @@ function genScheduleEvents(availSchedules, scheduleIndex) {
                 let classTimeStr = scheduleTimeFormatting(classSchIntArr[0], classSchIntArr[1]);
 
                 // Create new event based on given info
-                document.getElementById("events-" + indexToDay(day)).appendChild(newEvent(title, eventNum, classTimeStr[0], classTimeStr[1]));
+                addNewEventCal(title, day, eventNum, classTimeStr);
             }
         }
     }
