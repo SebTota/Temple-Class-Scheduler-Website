@@ -1,6 +1,17 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-167491159-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-167491159-1');
+    </script>
+
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script>document.getElementsByTagName("html")[0].className += " js";</script>
@@ -9,8 +20,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
-
 
     <style>
         .class-list {
@@ -49,6 +58,8 @@
         }
 
         .event-schedule-list-block {
+            display: inline-block !important;
+            height: 85%;
             font-size: 15px;
             color: white;
             padding: 0;
@@ -233,6 +244,11 @@
 
         </ul>
     </div>
+</div>
+
+<div class="footer text-center">
+    <p>This website is not associated with Temple University.</p>
+    <p>Contact admin@sebtota.com for all requests.</p>
 </div>
 
 <script src="assets/js/util.js"></script> <!-- util functions included in the CodyHouse framework -->

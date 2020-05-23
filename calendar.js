@@ -37,7 +37,9 @@ function newEvent(title, eventNum, startTime, endTime) {
     return event;
 }
 
-
+/*
+* Add new calendar event in order based on start time.
+ */
 function addNewEventCal(title, day, eventNum, classTimeStr) {
     let dayElem = document.getElementById("events-" + indexToDay(day));
     let newElem = newEvent(title, eventNum, classTimeStr[0], classTimeStr[1]);
