@@ -249,5 +249,12 @@ function scheduleChecker(classObjects) {
      */
     findScheduleRec(availSchedules, classList, startSchedule, startClasses,0);
     numAvailSchedules = availSchedules.classes.length; // Set to number of possible schedules found
-    genScheduleEvents(availSchedules, currSchIndex); // Update webpage schedule to represent first possible schedule
+    if (numAvailSchedules === 0) {
+        console.log("No available schedules found");
+        // Reset webpage to represent no available schedules
+        $("#calendar-content").html(empty_calendar); // Reset the schedule to include no courses
+        $("#class-event-list").html(empty_calendar_class_list); // Reset the schedule to include no courses
+    } else {
+        genScheduleEvents(availSchedules, currSchIndex); // Update webpage schedule to represent first possible schedule
+    }
 }

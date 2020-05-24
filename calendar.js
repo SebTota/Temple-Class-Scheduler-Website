@@ -115,6 +115,7 @@ function genScheduleEvents(availSchedules, scheduleIndex) {
     $("#class-event-list").html(empty_calendar_class_list); // Reset the schedule to include no courses
 
     let courseColor = 1;
+    console.log(availSchedules.classes);
     for (let course = 0; course < availSchedules.classes[scheduleIndex].length; course++) { // Each course
         let title = availSchedules.classes[scheduleIndex][course].title;
 
@@ -132,6 +133,7 @@ function genScheduleEvents(availSchedules, scheduleIndex) {
             newListItem(availSchedules.classes[scheduleIndex][course], eventNum));
 
 
+        /*
         if (title !== "Unavailable") {
             document.getElementById("class-event-list").appendChild(
                 newListItem(availSchedules.classes[scheduleIndex][course], eventNum));
@@ -140,6 +142,9 @@ function genScheduleEvents(availSchedules, scheduleIndex) {
                 newListItem(availSchedules.classes[scheduleIndex][course], eventNum));
             addedUnavailable = "True";
         }
+
+         */
+
 
 
 
