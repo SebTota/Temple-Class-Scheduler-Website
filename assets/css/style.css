@@ -3353,6 +3353,10 @@ mark {
 }
 
 :root {
+    --cd-color-event-unavailable: hsl(159, 25%, 46%);
+    --cd-color-event-unavailable-h: 159;
+    --cd-color-event-unavailable-s: 25%;
+    --cd-color-event-unavailable-l: 46%;
     --cd-color-event-1: hsl(199, 25%, 46%);
     --cd-color-event-1-h: 199;
     --cd-color-event-1-s: 25%;
@@ -3698,6 +3702,12 @@ a {
         margin-bottom: 0.125em;
         margin-bottom: var(--space-xxxxs)
     }
+}
+
+.cd-schedule__event [data-event="event-unavailable"],
+.cd-schedule-modal[data-event="event-unavailable"] .cd-schedule-modal__header-bg {
+    background: hsl(159, 25%, 46%);
+    background: var(--cd-color-event-unavailable)
 }
 
 .cd-schedule__event [data-event="event-1"],

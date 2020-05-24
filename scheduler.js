@@ -1,6 +1,8 @@
 const empty_calendar = $("#calendar-content").html(); // Create a reference to an empty calendar
 const empty_calendar_class_list = $("#class-event-list").html();
 const numDaysInWeek = 5; // Only Monday - Friday is supported
+let daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+
 
 // Global variables
 let currSchIndex = 0; // Current schedule index out of all possible schedules
@@ -22,22 +24,7 @@ function create2dArray(arr, col) {
 * Return day of the week index based on var 'day' input
 * Return -1 if day is not specified
  */
-function dayToIndex(day) {
-    switch(day) {
-        case "Mon":
-            return 0;
-        case "Tue":
-            return 1;
-        case "Wed":
-            return 2;
-        case "Thu":
-            return 3;
-        case "Fri":
-            return 4;
-        default:
-            return -1;
-    }
-}
+function dayToIndex(day) { return daysOfWeek.indexOf(day); }
 
 
 /*
@@ -183,21 +170,6 @@ function checkScheduleFit(schedule, newClass) {
     return tempSchedule;
 }
 
-
-async function getClasses(userClassList) {
-    let classListAPIReturn = [];
-
-    //--- Receive and parse data---//
-    // Iterate through each class in class list to get all all the schedules for each course
-    for (let i = 0; i < userClassList.length; i++) {
-        let courseSchedules = await getClassAPI(userClassList[i]);
-        if (courseSchedules === "Class Does Not Exist")
-            return userClassList[i];
-        classListAPIReturn.push(courseSchedules);
-    }
-
-    return classListAPIReturn;
-}
 
 /*
 * Recursive function call used to traverse through each course, then each section of said course.

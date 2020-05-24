@@ -109,13 +109,39 @@ function scheduleTimeFormatting(classStartInt, classEndInt) {
 * Generate all schedule events for the specified index of all possible schedules.
  */
 function genScheduleEvents(availSchedules, scheduleIndex) {
+    let addedUnavailable = "false";
+
     $("#calendar-content").html(empty_calendar); // Reset the schedule to include no courses
     $("#class-event-list").html(empty_calendar_class_list); // Reset the schedule to include no courses
 
+    let courseColor = 1;
     for (let course = 0; course < availSchedules.classes[scheduleIndex].length; course++) { // Each course
-        let eventNum = (course + 1).toString();
         let title = availSchedules.classes[scheduleIndex][course].title;
-        document.getElementById("class-event-list").appendChild(newListItem(availSchedules.classes[scheduleIndex][course], eventNum));
+
+        /*
+        * Needed to make sure "Unavailable" events are all the same color
+         */
+        let eventNum = "";
+        if (title !== "Unavailable") {
+            eventNum = courseColor.toString(); courseColor++;
+        } else {
+            eventNum = "unavailable";
+        }
+
+        document.getElementById("class-event-list").appendChild(
+            newListItem(availSchedules.classes[scheduleIndex][course], eventNum));
+
+
+        if (title !== "Unavailable") {
+            document.getElementById("class-event-list").appendChild(
+                newListItem(availSchedules.classes[scheduleIndex][course], eventNum));
+        } else if(addedUnavailable === "false") {
+            document.getElementById("class-event-list").appendChild(
+                newListItem(availSchedules.classes[scheduleIndex][course], eventNum));
+            addedUnavailable = "True";
+        }
+
+
 
         for (let day = 0; day < numDaysInWeek; day++) { // Each day of the week
             for (let sch = 0; sch < availSchedules.classes[scheduleIndex][course].schedule[day].length; sch++) { // Each start/end pair for that specific day
