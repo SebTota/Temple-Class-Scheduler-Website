@@ -81,6 +81,22 @@
             width: 60px;
         }
 
+        .unavailable-input {
+            min-width: 100px;
+            max-width: 200px;
+            width: 15%;
+        }
+
+        .unavailable-input-div {
+            display: inline;
+        }
+
+        .unavailable-input-container {
+            white-space: nowrap;
+            overflow-x: auto;
+        }
+
+
         .list_event_unavailable {
             background: hsl(159, 25%, 46%);
         }
@@ -127,25 +143,40 @@
         <form action="javascript:classSubmit()">
             <label for="classesInput">Classes:</label>
             <input type="text" id="classesInput" style="width:20%;">
-            <button type="button" id="more-options-button">More Options</button>
-            <button type="submit" id="btnFindSchedules">Find Schedules</button>
+            <div>
+                <button type="button" id="more-options-button">More Options</button>
+                <button type="submit" id="btnFindSchedules">Find Schedules</button>
+            </div>
         </form>
 
         <form id="more-options-form">
             <div id="more-options-unavailable">
                 <label>Times you are unavailable (use 24-hour time format) separated by commas</label>
                 <p>Ex. 11:00-14:00, 15:15-17:25</p>
-                <div style="display: inline; overflow-y: scroll;">
-                    <label for="unavailable-mon-input" class="unavailable-label">Mon</label>
-                    <input type="text" id="unavailable-mon-input" class="unavailable-input" placeholder="Ex. 11:00-14:00">
-                    <label for="unavailable-tue-input" class="unavailable-label">Tue</label>
-                    <input type="text" id="unavailable-tue-input" class="unavailable-input">
-                    <label for="unavailable-wed-input" class="unavailable-label">Wed</label>
-                    <input type="text" id="unavailable-wed-input" class="unavailable-input">
-                    <label for="unavailable-thu-input" class="unavailable-label">Thr</label>
-                    <input type="text" id="unavailable-thu-input" class="unavailable-input">
-                    <label for="unavailable-fri-input" class="unavailable-label">Fri</label>
-                    <input type="text" id="unavailable-fri-input" class="unavailable-input">
+                <div class="unavailable-input-container">
+                    <div >
+                        <div class="unavailable-input-div">
+                            <label for="unavailable-mon-input" class="unavailable-label">Mon</label>
+                            <input type="text" id="unavailable-mon-input" class="unavailable-input" placeholder="Ex. 11:00-14:00">
+                        </div>
+                        <div class="unavailable-input-div">
+                            <label for="unavailable-tue-input" class="unavailable-label">Tue</label>
+                            <input type="text" id="unavailable-tue-input" class="unavailable-input">
+                        </div>
+                        <div class="unavailable-input-div">
+                            <label for="unavailable-wed-input" class="unavailable-label">Wed</label>
+                            <input type="text" id="unavailable-wed-input" class="unavailable-input">
+                        </div>
+                        <div class="unavailable-input-div">
+                            <label for="unavailable-thu-input" class="unavailable-label">Thr</label>
+                            <input type="text" id="unavailable-thu-input" class="unavailable-input">
+                        </div>
+                        <div class="unavailable-input-div">
+                            <label for="unavailable-fri-input" class="unavailable-label">Fri</label>
+                            <input type="text" id="unavailable-fri-input" class="unavailable-input">
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
