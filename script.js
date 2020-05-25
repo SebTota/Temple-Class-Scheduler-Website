@@ -119,13 +119,16 @@ function classSubmit() {
     availSchedules = {schedule: [], classes: []};
 
     let classInputList = document.getElementById('classesInput').value; // Get class input data
+    // Set default value if no classes were entered
+    if (classInputList === undefined || classInputList === "") {
+        classInputList = "cis3223, cis4345, cis3515, cis3296";
+    }
     if (classInputList === "") return; // Check if class input is empty
 
     classInputList = classInputList.replace(/\s/g, ""); // Remove all empty spaces from input
     let tokenizedClassInputList = classInputList.split(","); // Tokenize classes based on ','
 
     let unavailTimes = parseUnavailableTimesInput();
-    console.log(unavailTimes);
 
     getClasses(tokenizedClassInputList).then(data => {
         /*
