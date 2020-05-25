@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Review</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .checked {
+            color: orange;
+        }
+    </style>
+
+
+</head>
+<body>
+<div>
+    <form>
+        <div>
+            <div>
+                <label for="course-input">Course</label>
+                <input id="course-input" type="text" >
+            </div>
+
+            <div>
+                <label for="rating-slider-input">Rating</label>
+                <input id="rating-slider-input" type="range" min="0" max="5" step="1" value="5" oninput="updateTextInput('rating-indicator', this.value);">
+                <label id="rating-indicator"></label>
+            </div>
+
+            <div>
+                <label for="difficulty-slider-input">Difficulty</label>
+                <input id="difficulty-slider-input" type="range" min="0" max="5" step="1" value="5" oninput="updateTextInput('difficulty-indicator', this.value);">
+                <label id="difficulty-indicator"></label>
+            </div>
+
+            <div>
+                <p>This will be used to edit/delete your review.pOnly the original author can modify a review.</p>
+                <label for="password-input" >Password:</label>
+                <input id="password-input" type="password">
+
+                <input id="show-password-checkbox" type="checkbox" onclick="togglePass('password-input')">
+                <label for="show-password-checkbox">Show Password</label>
+            </div>
+
+        </div>
+    </form>
+
+</div>
+<script src="review.js"></script>
+</body>
+</html>
