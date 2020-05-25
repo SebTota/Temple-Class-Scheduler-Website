@@ -23,6 +23,9 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
     <style>
+        body {
+            width: 100%;
+        }
         .class-list {
             height:90%;
             width: 25%;
@@ -31,30 +34,26 @@
             color: white;
         }
 
+
         @media screen and (max-width: 1300px) {
-            #input-size {
-                height: auto !important;
-            }
             .class-list {
                 display: none !important;
             }
             #calendar-content {
                 width: 100% !important;
             }
-            #classesInput {
-                width:40% !important;
-            }
         }
 
-        @media screen and (max-height: 900px), (max-width: 550px) {
+        @media screen and (max-height: 900px), (max-width: 800px) {
             .example-input-label {
                 display: none !important;
             }
-            #input-size {
-                height: auto !important;
-            }
             #title-header {
                 font-size: 25px;
+            }
+
+            #classesInput {
+                max-width: 100% !important;
             }
         }
 
@@ -71,11 +70,6 @@
             overflow: hidden !important;
         }
 
-        .center {
-            margin: auto;
-            width: 50%;
-            padding: 10px;
-        }
 
         .sch_button {
             width: 60px;
@@ -97,6 +91,12 @@
             white-space: nowrap;
             overflow-y: hidden;
             overflow-x: auto;
+        }
+
+        .cal-nav-btn {
+            min-width: 60px;
+            color: white;
+            background: grey;
         }
 
 
@@ -130,51 +130,62 @@
         .list_event_9 {
             background: hsl(58, 26%, 53%);
         }
+
     </style>
 </head>
 <body>
 
 
 
-<div id="input-size" style="min-height:20vh;">
+<div class="container" style="width: 100%;">
     <div class="header text-center">
         <h1 id="title-header">Temple Class Scheduler</h1>
-        <p id="instructions_1">Enter all classes you need to take this semester (upto 9 total classes) separated by commas, then cycle through all the possible schedules using the left and right arrows.</p>
-        <p class="example-input-label">Some schedules may look the same but will have different instructors.</p>
-        <p class="example-input-label">Ex. "CIS3223, CIS4345, CIS3515, CIS3296"</p>
-
+        <h5 id="instructions_1">Enter upto 9 classes separated by commas, then cycle through all the possible schedules using the left and right arrows.</h5>
+        <h5 class="example-input-label">Some schedules may look the same but will have different instructors.</h5>
+        <small class="example-input-label">Ex. "CIS3223, CIS4345, CIS3515, CIS3296"</small>
+    </div>
+    <div class="text-center">
         <form action="javascript:classSubmit()">
-            <label for="classesInput">Classes:</label>
-            <input type="text" id="classesInput" style="width:20%;">
-            <div>
-                <button type="button" id="more-options-button">More Options</button>
-                <button type="submit" id="btnFindSchedules">Find Schedules</button>
+            <div class="form-group class-input">
+                <div class="alert alert-danger" role="alert" style="display: none;">
+                    This is a warning alert—check it out!
+                </div>
+                <label for="classesInput">Classes:</label>
+                <input type="text" class="form-control" id="classesInput" style="max-width: 35%; margin:auto;">
+            </div>
+
+            <div class="form-group center">
+                <div class="text-center">
+                    <button type="button" class="btn btn-info" id="more-options-button">More Options</button>
+                    <button type="submit" class="btn btn-primary" id="btnFindSchedules">Find Schedules</button>
+                </div>
+
             </div>
         </form>
 
-        <form id="more-options-form">
-            <div id="more-options-unavailable">
-                <label>Times you are unavailable (use 24-hour time format) separated by commas</label>
-                <p>Ex. 11:00-14:00, 15:15-17:25</p>
+        <form id="more-options-form" class="text-center">
+            <div id="more-options-unavailable form-group" style="margin-bottom: 10px;">
+                <h5>Times you are unavailable (use 24-hour time format) separated by commas</h5>
+                <h5>Ex. 11:00-14:00, 15:15-17:25</h5>
                 <div class="unavailable-input-container">
                     <div >
-                        <div class="unavailable-input-div">
+                        <div class="unavailable-input-div form-group">
                             <label for="unavailable-mon-input" class="unavailable-label">Mon</label>
                             <input type="text" id="unavailable-mon-input" class="unavailable-input" placeholder="Ex. 11:00-14:00">
                         </div>
-                        <div class="unavailable-input-div">
+                        <div class="unavailable-input-div form-group">
                             <label for="unavailable-tue-input" class="unavailable-label">Tue</label>
                             <input type="text" id="unavailable-tue-input" class="unavailable-input">
                         </div>
-                        <div class="unavailable-input-div">
+                        <div class="unavailable-input-div form-group">
                             <label for="unavailable-wed-input" class="unavailable-label">Wed</label>
                             <input type="text" id="unavailable-wed-input" class="unavailable-input">
                         </div>
-                        <div class="unavailable-input-div">
+                        <div class="unavailable-input-div form-group">
                             <label for="unavailable-thu-input" class="unavailable-label">Thr</label>
                             <input type="text" id="unavailable-thu-input" class="unavailable-input">
                         </div>
-                        <div class="unavailable-input-div">
+                        <div class="unavailable-input-div form-group">
                             <label for="unavailable-fri-input" class="unavailable-label">Fri</label>
                             <input type="text" id="unavailable-fri-input" class="unavailable-input">
                         </div>
@@ -190,15 +201,13 @@
 </div>
 
 
-<div id="calendar-size" style="height:80vh;">
-    <div class="center">
-        <div class="center" style="width: 300px; height: 10%;">
-            <button id="button_back" class="sch_button"> < </button>
-            <p id="schedule_index_label_0" style="display: inline;">0</p>
-            <p style="display: inline;"> of </p>
-            <p id="schedule_index_label_1" style="display: inline;">0</p>
-            <button id="button_forward" class="sch_button"> > </button>
-        </div>
+<div style="height:80vh;">
+    <div class="text-center" style="margin-bottom: 10px;">
+        <button id="button_back" class="cal-nav-btn btn btn-sm"> < </button>
+        <h5 id="schedule_index_label_0" style="display: inline;">0</h5>
+        <h5 style="display: inline;"> of </h5>
+        <h5 id="schedule_index_label_1" style="display: inline;">0</h5>
+        <button id="button_forward" class="cal-nav-btn btn btn-sm"> > </button>
     </div>
 
 
@@ -311,8 +320,8 @@
 </div>
 
 <div class="footer text-center">
-    <p>This website is not associated with Temple University.</p>
-    <p>Contact admin@sebtota.com for all requests.</p>
+    <small>This website is not associated with Temple University.</small>
+    <small>Contact admin@sebtota.com for all requests.</small>
 </div>
 
 <script src="assets/js/util.js"></script> <!-- util functions included in the CodyHouse framework -->

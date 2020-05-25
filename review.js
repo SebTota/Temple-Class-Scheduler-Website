@@ -11,6 +11,7 @@ function togglePass(id) {
     }
 }
 
-// Init slider values to 5
-updateTextInput("rating-indicator", document.getElementById("rating-slider-input").value = 5);
-updateTextInput("difficulty-indicator", document.getElementById("difficulty-slider-input").value = 5);
+function updateTextCounter() {
+
+}
+

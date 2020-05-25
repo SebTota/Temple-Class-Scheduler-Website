@@ -4,46 +4,114 @@
     <meta charset="UTF-8">
     <title>Add Review</title>
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
-        .checked {
-            color: orange;
+        body {
+            font-family: Source Sans Pro,sans-serif;
+            width: 100%;
+            overflow-x: hidden;
+            margin-top: 20px;
         }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            border-bottom: 1px dotted black;
+        }
+
+        .tooltip .tooltip-text {
+            padding: 10px;
+            visibility: hidden;
+            width: 200px;
+            background-color: #c6c4c4;
+            opacity: 50%;
+            color: #0a0808;
+            text-align: center;
+            border-radius: 6px;
+
+            /* Position the tooltip */
+            position: absolute;
+            z-index: 1;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+        }
+
+        .form-container {
+            width: 500px;
+            padding-left: 10px;
+            padding-right: 10px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .form-input-container {
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+        .label {
+            width: 25%;
+            font-size: 20px;
+            color: black;
+        }
+
+        .slider {
+            float: right;
+            max-width: 300px;
+            width: 35%;
+            margin-left: 10px;
+        }
+        .class-rating {
+            float: right;
+        }
+
+        @media screen and (max-width: 700px){
+            .form-container {
+                width: auto;
+            }
+        }
+
     </style>
 
 
 </head>
 <body>
-<div>
+<div class="form-container">
+
     <form>
-        <div>
-            <div>
-                <label for="course-input">Course</label>
-                <input id="course-input" type="text" >
-            </div>
-
-            <div>
-                <label for="rating-slider-input">Rating</label>
-                <input id="rating-slider-input" type="range" min="0" max="5" step="1" value="5" oninput="updateTextInput('rating-indicator', this.value);">
-                <label id="rating-indicator"></label>
-            </div>
-
-            <div>
-                <label for="difficulty-slider-input">Difficulty</label>
-                <input id="difficulty-slider-input" type="range" min="0" max="5" step="1" value="5" oninput="updateTextInput('difficulty-indicator', this.value);">
-                <label id="difficulty-indicator"></label>
-            </div>
-
-            <div>
-                <p>This will be used to edit/delete your review.pOnly the original author can modify a review.</p>
-                <label for="password-input" >Password:</label>
-                <input id="password-input" type="password">
-
-                <input id="show-password-checkbox" type="checkbox" onclick="togglePass('password-input')">
-                <label for="show-password-checkbox">Show Password</label>
-            </div>
-
+        <div class="form-group">
+            <label for="course-input">Course</label>
+            <input type="text" class="form-control" id="course-input" placeholder="Enter course">
         </div>
+        <div class="form-group">
+            <label for="rating-input">Rating: </label>
+            <label id="rating-indicator">0</label>
+            <input type="range" class="form-control-range" id="rating-input" min="0" max="5" step="1" value="0" oninput="updateTextInput('rating-indicator', this.value);">
+        </div>
+        <div class="form-group">
+            <label for="difficulty-input">Difficulty: </label>
+            <label id="difficulty-indicator">0</label>
+            <input type="range" class="form-control-range" id="difficulty-input" min="0" max="5" step="1" value="0" oninput="updateTextInput('difficulty-indicator', this.value);">
+        </div>
+        <div class="form-group">
+            <label for="password-input">Password</label>
+            <small id="emailHelp" class="form-text text-muted">Needed if you want to edit/remove your post.</small>
+            <input type="password" class="form-control" id="password-input" placeholder="Optional Password">
+            <input id="show-password-checkbox" type="checkbox" onclick="togglePass('password-input')">
+            <label for="show-password-checkbox">Show Password</label>
+        </div>
+        <div class="form-group">
+            <label for="professor-review-input">Professor Review</label>
+            <textarea class="form-control" id="professor-review-input" rows="3" maxlength="200"></textarea>
+            <span class="pull-right label label-default" id="count_message">123</span>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 
 </div>
