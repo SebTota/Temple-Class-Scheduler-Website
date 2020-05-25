@@ -129,11 +129,16 @@ function genScheduleEvents(availSchedules, scheduleIndex) {
             eventNum = "unavailable";
         }
 
-        document.getElementById("class-event-list").appendChild(
-            newListItem(availSchedules.classes[scheduleIndex][course], eventNum));
-
+        /*
+        * Use the commented out code below if you would like the calendar-list to hold each reference to an
+        * unavailable time slot.
+         */
 
         /*
+        document.getElementById("class-event-list").appendChild(
+            newListItem(availSchedules.classes[scheduleIndex][course], eventNum));
+         */
+
         if (title !== "Unavailable") {
             document.getElementById("class-event-list").appendChild(
                 newListItem(availSchedules.classes[scheduleIndex][course], eventNum));
@@ -142,10 +147,6 @@ function genScheduleEvents(availSchedules, scheduleIndex) {
                 newListItem(availSchedules.classes[scheduleIndex][course], eventNum));
             addedUnavailable = "True";
         }
-
-         */
-
-
 
 
         for (let day = 0; day < numDaysInWeek; day++) { // Each day of the week
