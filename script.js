@@ -1,4 +1,4 @@
-const apiUrl = "https://temple.sebtota.com";
+const apiUrl = "https://api.sebtota.com";
 const apiPort = "3000";
 
 let moreOptionsDiv = document.getElementById("more-options-form");
