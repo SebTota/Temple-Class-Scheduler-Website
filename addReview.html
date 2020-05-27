@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <title>Add Review</title>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta.2/css/bootstrap.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta.2/js/bootstrap.bundle.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         body {
             font-family: Source Sans Pro,sans-serif;
@@ -52,24 +52,8 @@
             margin-right: auto;
         }
 
-        .form-input-container {
-            padding-top: 5px;
-            padding-bottom: 5px;
-        }
-        .label {
-            width: 25%;
-            font-size: 20px;
-            color: black;
-        }
-
-        .slider {
-            float: right;
-            max-width: 300px;
-            width: 35%;
-            margin-left: 10px;
-        }
-        .class-rating {
-            float: right;
+        #review-form {
+            display: none;
         }
 
         @media screen and (max-width: 700px){
@@ -83,52 +67,50 @@
 
 </head>
 <body>
-<div class="form-container">
+<div class="header text-center">
+    <h2 id="title-header">Temple Class Scheduler</h2>
+    <h5 id="instructions_1">Select an instructor to leave a review.</h5>
+</div>
 
-    <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdown_instructor" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false">Instructor</button>
-        <div id="menu" class="dropdown-menu" aria-labelledby="dropdown_instructor" style="max-height: 300px; overflow-y: auto;">
-            <form class="px-4 py-2">
-                <input type="search" class="form-control" id="searchInstructor" placeholder="Instructor" autofocus="autofocus">
-            </form>
-            <div id="menuItems"></div>
-            <div id="empty" class="dropdown-header">No instructor found</div>
+<div class="form-container">
+    <div id="prof-search-container" class="dropdown form-group">
+        <input type="text" placeholder="Name" class="form-control" id="instructor-dropdown-input" onkeyup="filterInstructor(this.value)" onclick="filterInstructor(this.value)" autocomplete="off">
+        <div id="professor-search-results" style="display: none;" class="dropdown-menu">
         </div>
     </div>
 
-    <form>
-        <div class="form-group">
-            <label for="course-input">Course</label>
-            <input type="text" class="form-control" id="course-input" placeholder="Enter course">
-        </div>
-        <div class="form-group">
-            <label for="rating-input">Rating: </label>
-            <label id="rating-indicator">0</label>
-            <input type="range" class="form-control-range" id="rating-input" min="0" max="5" step="1" value="0" oninput="updateTextInput('rating-indicator', this.value);">
-        </div>
-        <div class="form-group">
-            <label for="difficulty-input">Difficulty: </label>
-            <label id="difficulty-indicator">0</label>
-            <input type="range" class="form-control-range" id="difficulty-input" min="0" max="5" step="1" value="0" oninput="updateTextInput('difficulty-indicator', this.value);">
-        </div>
-        <div class="form-group">
-            <label for="password-input">Password</label>
-            <small id="emailHelp" class="form-text text-muted">Needed if you want to edit/remove your post.</small>
-            <input type="password" class="form-control" id="password-input" placeholder="Optional Password">
-            <input id="show-password-checkbox" type="checkbox" onclick="togglePass('password-input')">
-            <label for="show-password-checkbox">Show Password</label>
-        </div>
-        <div class="form-group">
-            <label for="professor-review-input">Professor Review</label>
-            <textarea class="form-control" id="professor-review-input" rows="3" maxlength="200"></textarea>
-            <span class="pull-right label label-default" id="count_message">123</span>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-
+    <div id="review-form">
+        <form>
+            <div class="form-group">
+                <label for="course-input">Course</label>
+                <input type="text" class="form-control" id="course-input" placeholder="Enter course" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="rating-input">Rating: </label>
+                <label id="rating-indicator">0</label>
+                <input type="range" class="form-control-range" id="rating-input" min="0" max="5" step="1" value="0" oninput="updateTextInput('rating-indicator', this.value);">
+            </div>
+            <div class="form-group">
+                <label for="difficulty-input">Difficulty: </label>
+                <label id="difficulty-indicator">0</label>
+                <input type="range" class="form-control-range" id="difficulty-input" min="0" max="5" step="1" value="0" oninput="updateTextInput('difficulty-indicator', this.value);">
+            </div>
+            <div class="form-group">
+                <label for="password-input">Password</label>
+                <small id="emailHelp" class="form-text text-muted">Needed if you want to edit/remove your post.</small>
+                <input type="password" class="form-control" id="password-input" placeholder="Optional Password">
+                <input id="show-password-checkbox" type="checkbox" onclick="togglePass('password-input')">
+                <label for="show-password-checkbox">Show Password</label>
+            </div>
+            <div class="form-group">
+                <label for="professor-review-input">Professor Review</label>
+                <textarea class="form-control" id="professor-review-input" rows="3" maxlength="200"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
 </div>
 <script src="review.js"></script>
-<script src="instructors.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

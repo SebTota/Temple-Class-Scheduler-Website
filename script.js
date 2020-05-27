@@ -62,6 +62,20 @@ async function getClasses(userClassList) {
     return classListAPIReturn;
 }
 
+async function searchProf(searchName) {
+    let apiCall = apiUrl + ":" + apiPort + "/searchProfList/" + searchName;
+
+    // Make api call and wait for response before returning
+    // Add CORS header to allow cross origin resource sharing
+    let response = await fetch(apiCall, {
+        mode: 'cors',
+        headers: {
+            'Access-Control-Allow-Origin':'*'
+        }
+    });
+    return await response.json();
+}
+
 //---END OF API CALLS---//
 
 /*
@@ -105,7 +119,7 @@ function parseUnavailableTimesInput() {
 }
 
 
-//---ACTION LISTENERS---//
+//---EVENT HANDLERS---//
 function classSubmit() {
     // Reset bad class input label if previous find schedules call returned in error
     document.getElementsByClassName("example-input-label")[1].textContent = 'Ex. "CIS3223, CIS4345, CIS3515, CIS3296"';
@@ -150,29 +164,26 @@ function classSubmit() {
     });
 }
 
-// Schedule left and right buttons
-document.getElementById("button_back").addEventListener("click", function(){
-    if (numAvailSchedules === -1) return; // No schedule created yet
+// Scroll through schedules using left and right buttons
+function calendarScrollButton(btn) {
+    if (numAvailSchedules <= 0) return; // No schedule created yet
 
-    // Only decrement schedule counter if currSchIndex (current schedule index) is positive
-    if (currSchIndex >= 1) --currSchIndex;
-    updateSchPageIndex();
-    genScheduleEvents(availSchedules, currSchIndex % numAvailSchedules);
-});
+    if (btn === "forward") {
+        currSchIndex = ++currSchIndex % numAvailSchedules;
+    } else {
+        // Only decrement schedule counter if currSchIndex (current schedule index) is positive
+        if (currSchIndex >= 1) --currSchIndex;
+    }
 
-document.getElementById("button_forward").addEventListener("click", function(){
-    if (numAvailSchedules === -1) return; // No schedule created yet
-
-    currSchIndex = ++currSchIndex % numAvailSchedules;
     updateSchPageIndex();
     genScheduleEvents(availSchedules, currSchIndex);
-});
+}
 
-document.getElementById("more-options-button").addEventListener("click", function () {
+function displayMoreOptions() {
     if (moreOptionsDiv.style.display === "none" || moreOptionsDiv.style.display === "") {
         moreOptionsDiv.style.display = "inline";
     } else {
         moreOptionsDiv.style.display = "none";
     }
-});
-//---END ACTION LISTENERS---//
+}
+//---END EVENT HANDLERS---//

@@ -156,7 +156,7 @@
 
             <div class="form-group center">
                 <div class="text-center">
-                    <button type="button" class="btn btn-info" id="more-options-button">More Options</button>
+                    <button type="button" class="btn btn-info" id="more-options-button" onclick="displayMoreOptions()">More Options</button>
                     <button type="submit" class="btn btn-primary" id="btnFindSchedules">Find Schedules</button>
                 </div>
 
@@ -203,11 +203,11 @@
 
 <div style="height:80vh;">
     <div class="text-center" style="margin-bottom: 10px;">
-        <button id="button_back" class="cal-nav-btn btn btn-sm"> < </button>
+        <button id="button_back" class="cal-nav-btn btn btn-sm" onclick="calendarScrollButton('back')"> < </button>
         <h5 id="schedule_index_label_0" style="display: inline;">0</h5>
         <h5 style="display: inline;"> of </h5>
         <h5 id="schedule_index_label_1" style="display: inline;">0</h5>
-        <button id="button_forward" class="cal-nav-btn btn btn-sm"> > </button>
+        <button id="button_forward" class="cal-nav-btn btn btn-sm" onclick="calendarScrollButton('forward')"> > </button>
     </div>
 
 
