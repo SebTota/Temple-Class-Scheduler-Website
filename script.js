@@ -1,9 +1,23 @@
-const apiUrl = "https://api.sebtota.com";
+// const apiUrl = "https://api.sebtota.com";
+const apiUrl="http://localhost"
 const apiPort = "3000";
 
 let moreOptionsDiv = document.getElementById("more-options-form");
 
 //---API CALLS---//
+
+async function fetchApi(apiCall) {
+    // Make api call and wait for response before returning
+    // Add CORS header to allow cross origin resource sharing
+    let response = await fetch(apiCall, {
+        mode: 'cors',
+        headers: {
+            'Access-Control-Allow-Origin':'*'
+        }
+    });
+    return await response.json();
+}
+
 
 // Generate the end of the url string to send an array of classes
 // Format: "cls=CLASS&cls=CLASS2&cls=CLASS3"
@@ -62,8 +76,8 @@ async function getClasses(userClassList) {
     return classListAPIReturn;
 }
 
-async function searchProf(searchName) {
-    let apiCall = apiUrl + ":" + apiPort + "/searchProfList/" + searchName;
+async function searchProf(searchTerm) {
+    let apiCall = apiUrl + ":" + apiPort + "/searchProfList/" + searchTerm;
 
     // Make api call and wait for response before returning
     // Add CORS header to allow cross origin resource sharing
@@ -74,6 +88,10 @@ async function searchProf(searchName) {
         }
     });
     return await response.json();
+}
+
+async function findClassAPI(searchTerm) {
+    return await fetchApi(apiUrl + ":" + apiPort + "/searchClassList/" + searchTerm);
 }
 
 //---END OF API CALLS---//

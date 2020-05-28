@@ -2,21 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Add Review</title>
+    <title>Review Professor</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body {
             font-family: Source Sans Pro,sans-serif;
             width: 100%;
-            overflow-x: hidden;
-            margin-top: 20px;
         }
 
         .tooltip {
@@ -61,29 +59,53 @@
                 width: auto;
             }
         }
+        .navbar-inverse .navbar-brand:hover,
+        .navbar-inverse .navbar-brand:focus {
+            background-color: transparent;
+            color: #999999;
+        }
+
 
     </style>
 
 
 </head>
 <body>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand">Temple Class Scheduler</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+                <li><a href="/index.html">Find a Schedule</a></li>
+                <li class="active"><a href="/review.html">Review a Professor</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
 <div class="header text-center">
-    <h2 id="title-header">Temple Class Scheduler</h2>
-    <h5 id="instructions_1">Select an instructor to leave a review.</h5>
+    <h1 id="title-header">Review a Professor</h1>
 </div>
 
 <div class="form-container">
     <div id="prof-search-container" class="dropdown form-group">
-        <input type="text" placeholder="Name" class="form-control" id="instructor-dropdown-input" onkeyup="filterInstructor(this.value)" onclick="filterInstructor(this.value)" autocomplete="off">
-        <div id="professor-search-results" style="display: none;" class="dropdown-menu">
-        </div>
+        <input type="text" placeholder="Name" class="form-control" id="instructor-dropdown-input" onkeyup="profSearchHandler(this.value)" autocomplete="off">
+        <div id="professor-search-results" style="display: none;" class="dropdown-menu"></div>
     </div>
 
     <div id="review-form">
         <form>
-            <div class="form-group">
+            <div class="dropdown form-group">
                 <label for="course-input">Course</label>
-                <input type="text" class="form-control" id="course-input" placeholder="Enter course" autocomplete="off">
+                <input type="text" class="form-control" id="course-input" placeholder="Enter course" autocomplete="off" onkeyup="classSearchHandler(this.value)">
+                <div id="class-search-results" style="display: none;" class="dropdown-menu"></div>
             </div>
             <div class="form-group">
                 <label for="rating-input">Rating: </label>
@@ -104,7 +126,9 @@
             </div>
             <div class="form-group">
                 <label for="professor-review-input">Professor Review</label>
-                <textarea class="form-control" id="professor-review-input" rows="3" maxlength="200"></textarea>
+                <textarea class="form-control" id="professor-review-input" rows="3" maxlength="300" oninput="updateTextCounter(this.value.length)"></textarea>
+                <small id="professor-review-text-count">0</small>
+                <small>of 300 characters used.</small>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
