@@ -172,8 +172,12 @@
                 <div class="alert alert-danger" role="alert" style="display: none;">
                     This is a warning alert—check it out!
                 </div>
-                <label for="classesInput">Classes:</label>
-                <input type="text" class="form-control" id="classesInput" placeholder="cis3223, cis4345, cis3515, cis3296" style="max-width: 35%; margin:auto;">
+                <label for="course-list-input">Courses:</label>
+                <ul id="selected-class-list" class="list-inline" style="overflow-y: scroll; white-space: nowrap"></ul>
+                <div class="dropdown form-group">
+                    <input type="text" class="form-control" id="course-list-input" placeholder="Enter course (Ex. CIS1001)" autocomplete="off" onclick="classSearchHandler_SchedulePage(this.value)" onkeyup="classSearchHandler_SchedulePage(this.value)">
+                    <div id="class-search-results" style="max-width: 300px; display: none;" class="dropdown-menu"></div>
+                </div>
             </div>
 
             <div class="form-group center">
