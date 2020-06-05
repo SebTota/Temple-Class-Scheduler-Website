@@ -1,13 +1,16 @@
 // const apiUrl = "https://api.sebtota.com";
 const apiUrl="http://localhost"
-const apiPort = "3000";
+const apiPort = "4001";
+
+const calendarElem = document.getElementById("calendar-content");
+const listElem = document.getElementById("list-content");
 
 let moreOptionsDiv = document.getElementById("more-options-form");
 
 let selectedClasses = [];
 
 //---API CALLS---//
-async function fetchApi(apiCall) {
+async function fetchApi(apiCall){
     // Make api call and wait for response before returning
     // Add CORS header to allow cross origin resource sharing
     let response = await fetch(apiCall, {
@@ -33,6 +36,8 @@ async function api_addReview(instructor, course, rating, difficulty, review, ema
         "&takeAgain=" + encodeURIComponent(takeAgain) +
         "&email=" + encodeURIComponent(email) +
         "&pass=" + encodeURIComponent(pass);
+
+    console.log(addReviewUrl);
 
     return await fetchApi(apiUrl + ":" + apiPort + '/addReview?' + addReviewUrl);
 }
@@ -102,14 +107,6 @@ Array.prototype.remove = function() {
     return this;
 };
 
-/*
- * Change display to indicate an error in one of the classes from the input
- */
-function badClassInput(classError){
-    document.getElementById("classesInput").style.borderColor = "red";
-    document.getElementsByClassName("example-input-label")[1].textContent = "Error on class: " + classError;
-}
-
 function parseUnavailableTimesInput() {
     let unavailArr = [];
     for (let day = 0; day < numDaysInWeek; day++) {
@@ -152,14 +149,18 @@ function classSubmit() {
     numAvailSchedules = -1;
     availSchedules = {schedule: [], classes: []};
 
+    // Bug fix: Needed encse no classes are specified at first, but then more are added since default classes
+    // added below wont clear out.
+    let selectedClassList = selectedClasses;
+
     // Set default value if no classes were entered
     if (selectedClasses.length === 0) {
-        selectedClasses = ["cis3223", "cis4345", "cis3515", "cis3296"];
+        selectedClassList = ["cis3223", "cis4345", "cis3515", "cis3296"];
     }
 
     let unavailTimes = parseUnavailableTimesInput();
 
-    getClasses(selectedClasses).then(data => {
+    getClasses(selectedClassList).then(data => {
         /*
         * If data is a string, then it will be the first class from the input that resulted in an error/class not found
         * from the api. If the data is not a string, then it is an array of unique course arrays holding all the objects
@@ -172,9 +173,6 @@ function classSubmit() {
 
             scheduleChecker(data); // Put in some serious work to find all combinations of possible schedules
             updateSchPageIndex(); // Update the counter indicating total number of available schedules
-        } else {
-            // Indicate error in class list input
-            badClassInput(data);
         }
     });
 }
@@ -199,6 +197,25 @@ function displayMoreOptions() {
         moreOptionsDiv.style.display = "inline";
     } else {
         moreOptionsDiv.style.display = "none";
+    }
+}
+
+function changeCalendarView() {
+    var mq = window.matchMedia( "(max-width: 1024px)" );
+    if (mq.matches) {
+        if (listElem.style.display !== "inline") {
+            // Make list visible
+            calendarElem.style.display = "none";
+            calendarElem.style.width = "0";
+            listElem.style.display = "inline";
+            listElem.style.width = "100%";
+        } else {
+            // Make calendar visible
+            listElem.style.display = "none";
+            listElem.style.width = "0";
+            calendarElem.style.display = "inline";
+            calendarElem.style.width = "100%";
+        }
     }
 }
 //---END EVENT HANDLERS---//
@@ -250,10 +267,8 @@ function courseSelected_ReviewPage(className) {
 }
 
 function classListItemHandler(item) {
-    console.log(item);
-    console.log(item.classList[1]);
     if (item.classList.contains('list-group-item-danger')) {
-        item.parentNode.removeChild(item);
+        item.parentNode.parentNode.removeChild(item.parentNode);
         selectedClasses.remove(item.textContent);
     } else {
         item.classList.add('list-group-item-danger');

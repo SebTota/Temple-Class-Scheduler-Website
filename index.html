@@ -34,25 +34,24 @@
         }
 
 
-        @media screen and (max-width: 1300px) {
+        @media screen and (max-width: 1024px) {
             .class-list {
-                display: none !important;
+                display: none;
             }
             #calendar-content {
                 width: 100% !important;
             }
+            .event-schedule-mobile {
+                display: inline !important;
+            }
+            #btnChangeView {
+                display: inline !important;
+            }
         }
 
         @media screen and (max-height: 900px), (max-width: 800px) {
-            .example-input-label {
-                display: none !important;
-            }
             #title-header {
                 font-size: 25px;
-            }
-
-            #classesInput {
-                max-width: 100% !important;
             }
         }
 
@@ -61,7 +60,7 @@
         }
 
         .event-schedule-list-block {
-            display: inline-block !important;
+            display: inline-block;
             height: 85%;
             font-size: 15px;
             color: white;
@@ -102,6 +101,15 @@
         .navbar-inverse .navbar-brand:focus {
             background-color: transparent;
             color: #999999;
+        }
+
+        .event-schedule-mobile {
+            display: none;
+        }
+
+        .event-schedule-list-block {
+            height: auto !important;
+            max-height: 70%;
         }
 
 
@@ -162,26 +170,23 @@
 <div style="width: 100%;">
     <div class="header text-center">
         <h1 id="title-header">Find a Class Schedule</h1>
-        <h5 id="instructions_1">Enter upto 9 classes separated by commas, then cycle through all the possible schedules using the left and right arrows.</h5>
-        <h5 class="example-input-label">Some schedules may look the same but will have different instructors/crns.</h5>
-        <small class="example-input-label">Ex. "CIS3223, CIS4345, CIS3515, CIS3296"</small>
+        <h5 id="instructions_1">Enter upto 9 courses by searching for a course in the search box and choosing from the drop down list.</h5>
+        <h5>To delete a course in your list, click once to highlight the course in red, then again to delete the course.</h5>
     </div>
     <div class="text-center">
         <form action="javascript:classSubmit()">
             <div class="form-group class-input">
-                <div class="alert alert-danger" role="alert" style="display: none;">
-                    This is a warning alert—check it out!
-                </div>
                 <label for="course-list-input">Courses:</label>
                 <ul id="selected-class-list" class="list-inline" style="overflow-y: scroll; white-space: nowrap"></ul>
-                <div class="dropdown form-group">
+                <div class="dropdown form-group" style="max-width: 300px; margin: 0 auto;">
                     <input type="text" class="form-control" id="course-list-input" placeholder="Enter course (Ex. CIS1001)" autocomplete="off" onclick="classSearchHandler_SchedulePage(this.value)" onkeyup="classSearchHandler_SchedulePage(this.value)">
-                    <div id="class-search-results" style="max-width: 300px; display: none;" class="dropdown-menu"></div>
+                    <div id="class-search-results" style="display: none;" class="dropdown-menu"></div>
                 </div>
             </div>
 
             <div class="form-group center">
                 <div class="text-center">
+                    <button type="button" class="btn btn-info" id="btnChangeView" style="display: none" onclick="changeCalendarView()">Change View</button>
                     <button type="button" class="btn btn-info" id="more-options-button" onclick="displayMoreOptions()">More Options</button>
                     <button type="submit" class="btn btn-primary" id="btnFindSchedules">Find Schedules</button>
                 </div>
@@ -235,6 +240,7 @@
         <h5 id="schedule_index_label_1" style="display: inline;">0</h5>
         <button id="button_forward" class="cal-nav-btn btn btn-sm" onclick="calendarScrollButton('forward')"> > </button>
     </div>
+
 
 
     <div id="calendar-content" style="height:90%; overflow-y: scroll; width: 75%; float:left;">

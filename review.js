@@ -11,7 +11,7 @@ const passwordMatchLabel = document.getElementById('password-match-label');
 
 // Completed review elements
 const reviewCompleteLabel = document.getElementById("review-complete-label");
-const reviewCompleteLabelNewAccont = document.getElementById("new-account-label");
+const reviewCompleteLabelNewAccount = document.getElementById("new-account-label");
 
 // Form elements
 const reviewForm = document.getElementById('review-form');
@@ -79,7 +79,8 @@ function reviewSubmit() {
     let pass = document.getElementById('password-input').value;
 
 
-    api_addReview(course, professor, rating, difficulty, review, email, pass).then(ret => {
+    api_addReview(professor, course, rating, difficulty, review, email, pass).then(ret => {
+        console.log(ret);
         reviewComplete(ret);
     });
 
@@ -89,18 +90,27 @@ function reviewSubmit() {
 }
 
 function reviewComplete(ret) {
-    // Reset review page and forms
-    reviewForm.reset();
-    professorSearchForm.reset();
-    reviewForm.style.display = "none";
-    professorSearchForm.style.display = "inline";
-
-    if (ret.data === 'review added') {
-        reviewCompleteLabel.style.display = "inline";
+    console.log(ret);
+    if (ret.data === 'incorrect password'){
+        // Handle incorrect password
     } else {
-        reviewCompleteLabel.style.display = "inline";
-        reviewCompleteLabelNewAccont.style.display = "inline";
+        // Review added successfully
+        // Reset review page and forms
+        reviewForm.reset();
+        professorSearchForm.reset();
+        reviewForm.style.display = "none";
+        professorSearchForm.style.display = "inline";
+
+        if (ret.data === 'review added') {
+            // Review added to existing users account
+            reviewCompleteLabel.style.display = "inline";
+        } else if (ret.data === 'review added - new account'){
+            // New user created and review added
+            reviewCompleteLabel.style.display = "inline";
+            reviewCompleteLabelNewAccount.style.display = "inline";
+        }
     }
+
 }
 //--- END OF ACTION HANDLERS ---//
 
@@ -126,6 +136,10 @@ function createProfResultItems(profs) {
 
 // Create a list of professors from the database once the user enters at least 3 characters
 function profSearchHandler(val) {
+    // Reset review complete labels for new search
+    reviewCompleteLabel.style.display = "none";
+    reviewCompleteLabelNewAccount.style.display = "none";
+
     // Only start showing search results after 3 characters of input
     if (val.length >= 3) {
         api_searchProf(val).then(returnVal => {
@@ -146,10 +160,10 @@ function professorSelected(prof) {
 
 //--- COURSE DROPDOWN SEARCH ---//
 function createClassSearchList(classes) {
+    // Clear previous search results
     $("#class-search-results").empty();
 
     let newRows = [];
-
     if (classes === null || classes.length === 0) {
         newRows.push('<li><a class="dropdown-item">No Results</a></li>');
     } else {

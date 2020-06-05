@@ -71,7 +71,7 @@
 <div class="header text-center">
     <h1 id="title-header">Review a Professor</h1>
     <h6 id="review-complete-label" style="display:none">Thank you for leaving a review!</h6>
-    <h6 id="new-account-label" style="display:none">Please check your e-mail to confirm your new account!</h6>
+    <h6 id="new-account-label" style="display:none">Please check your email to confirm your new account! If you can't find the email check your SPAM folder.</h6>
 </div>
 
 <div class="form-container">
@@ -115,7 +115,7 @@
             </div>
             <div class="form-group">
                 <label for="email-input">Email</label>
-                <small id="email-help" class="form-text text-muted">Verifying e-mail gives your review a verfied badge.</small>
+                <small id="email-help" class="form-text text-muted">Verifying e-mail gives your review a verified badge.</small>
                 <br>
                 <a id="email-tooltip" data-toggle="tooltip" title="While Temple can see you received a verification e-mail, the review can not be linked to you. Your e-mail is ONLY used to verify your student status, after which it is stored in a hashed format. Hashed e-mails are stored to ensure the same e-mail doesn't review an instructor twice.">Can Temple see which review is mine?</a>
                 <input type="email" class="form-control" id="email-input" placeholder="Optional @temple.edu">
@@ -133,7 +133,7 @@
                 <input type="password" class="form-control" id="password-verify-input" placeholder="Verify Password" oninput="comparePass()">
                 <small id="password-match-label" style="display: none; color: red;">Passwords don't match!</small>
             </div>
-            <button type="submit" class="btn btn-primary" onclick="reviewSubmit()">Submit</button>
+            <button type="button" class="btn btn-primary" onclick="reviewSubmit()">Submit</button>
         </div>
     </form>
 </div>
