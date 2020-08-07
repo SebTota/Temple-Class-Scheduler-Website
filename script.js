@@ -1,6 +1,6 @@
-// const apiUrl = "https://api.sebtota.com";
-const apiUrl="http://localhost"
-const apiPort = "4001";
+const apiUrl = "https://api.sebtota.com";
+// const apiUrl="http://localhost"
+const apiPort = "3000";
 
 const calendarElem = document.getElementById("calendar-content");
 const listElem = document.getElementById("list-content");
