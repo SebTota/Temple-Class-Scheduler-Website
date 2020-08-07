@@ -16,7 +16,7 @@ function updateSchPageIndex() {
 /*
 * Create a new schedule event based on information of the class.
  */
-function newEvent(title, eventNum, startTime, endTime) {
+function newEvent(course, eventNum, startTime, endTime) {
     let event = document.createElement("li");
     event.setAttribute("start_time", startTime);
     event.classList.add("cd-schedule__event");
@@ -29,9 +29,23 @@ function newEvent(title, eventNum, startTime, endTime) {
 
     let eventTitle = document.createElement("em");
     eventTitle.classList.add("event-schedule-list-block");
-    eventTitle.textContent = title;
+    eventTitle.textContent = course.title;
+
+    let eventCrn = document.createElement("em");
+    eventCrn.classList.add("event-schedule-list-block");
+    eventCrn.classList.add("event-schedule-mobile");
+    eventCrn.textContent = "CRN: " + course.crn;
+
+    let eventProf = document.createElement("em");
+    eventProf.classList.add("event-schedule-list-block");
+    eventProf.classList.add("event-schedule-mobile");
+    eventProf.textContent = "Prof: " + course.instructor;
 
     eventData.appendChild(eventTitle);
+    eventData.appendChild(document.createElement("br"));
+    eventData.appendChild(eventCrn);
+    eventData.appendChild(document.createElement("br"));
+    eventData.appendChild(eventProf);
     event.appendChild(eventData);
 
     return event;
@@ -40,9 +54,9 @@ function newEvent(title, eventNum, startTime, endTime) {
 /*
 * Add new calendar event in order based on start time.
  */
-function addNewEventCal(title, day, eventNum, classTimeStr) {
+function addNewEventCal(course, day, eventNum, classTimeStr) {
     let dayElem = document.getElementById("events-" + indexToDay(day));
-    let newElem = newEvent(title, eventNum, classTimeStr[0], classTimeStr[1]);
+    let newElem = newEvent(course, eventNum, classTimeStr[0], classTimeStr[1]);
     dayElem.appendChild(newElem);
 
     let childNum = dayElem.children.length - 2;
@@ -117,13 +131,13 @@ function genScheduleEvents(availSchedules, scheduleIndex) {
     let courseColor = 1;
     console.log(availSchedules.classes);
     for (let course = 0; course < availSchedules.classes[scheduleIndex].length; course++) { // Each course
-        let title = availSchedules.classes[scheduleIndex][course].title;
+        let cls = availSchedules.classes[scheduleIndex][course]
 
         /*
         * Needed to make sure "Unavailable" events are all the same color
          */
         let eventNum = "";
-        if (title !== "Unavailable") {
+        if (cls.title !== "Unavailable") {
             eventNum = courseColor.toString(); courseColor++;
         } else {
             eventNum = "unavailable";
@@ -139,7 +153,7 @@ function genScheduleEvents(availSchedules, scheduleIndex) {
             newListItem(availSchedules.classes[scheduleIndex][course], eventNum));
          */
 
-        if (title !== "Unavailable") {
+        if (cls.title !== "Unavailable") {
             document.getElementById("class-event-list").appendChild(
                 newListItem(availSchedules.classes[scheduleIndex][course], eventNum));
         } else if(addedUnavailable === "false") {
@@ -158,7 +172,7 @@ function genScheduleEvents(availSchedules, scheduleIndex) {
                 let classTimeStr = scheduleTimeFormatting(classSchIntArr[0], classSchIntArr[1]);
 
                 // Create new event based on given info
-                addNewEventCal(title, day, eventNum, classTimeStr);
+                addNewEventCal(cls, day, eventNum, classTimeStr);
             }
         }
     }

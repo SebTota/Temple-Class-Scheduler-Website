@@ -1,27 +1,16 @@
 const apiUrl = "https://api.sebtota.com";
-const apiPort = "3000";
+// const apiUrl="http://localhost"
+const apiPort = "4001";
+
+const calendarElem = document.getElementById("calendar-content");
+const listElem = document.getElementById("list-content");
 
 let moreOptionsDiv = document.getElementById("more-options-form");
 
+let selectedClasses = [];
+
 //---API CALLS---//
-
-// Generate the end of the url string to send an array of classes
-// Format: "cls=CLASS&cls=CLASS2&cls=CLASS3"
-function genClassArrStr(classes) {
-    let classUrl = ("cls=") + classes[0]; // First class does not get '&' in front of 'cls' key
-
-    // Append format '&cls=CLASS' for classes 2-n in classes
-    for (let cls = 1; cls < classes.length; cls++) {
-        classUrl = classUrl + ("&cls=") + classes[cls];
-    }
-
-    return classUrl; // Return string
-}
-
-// Make an api call to return all weekSchedule of each course in array 'classes'
-async function getClassesAPI(classes) {
-    let apiCall = apiUrl + ":" + apiPort + "/classes?" + genClassArrStr(classes);
-
+async function fetchApi(apiCall){
     // Make api call and wait for response before returning
     // Add CORS header to allow cross origin resource sharing
     let response = await fetch(apiCall, {
@@ -33,8 +22,29 @@ async function getClassesAPI(classes) {
     return await response.json();
 }
 
-async function getClassAPI(className) {
-    let apiCall = apiUrl + ":" + apiPort + "/class/" + className;
+async function findClassAPI(searchTerm) {
+    return await fetchApi(apiUrl + ":" + apiPort + "/searchClassList/" + searchTerm);
+}
+
+async function api_addReview(instructor, course, rating, difficulty, review, email, pass) {
+    let addReviewUrl =
+        "instructor=" + encodeURIComponent(instructor) +
+        "&course=" + encodeURIComponent(course) +
+        "&rating=" + encodeURIComponent(rating) +
+        "&difficulty=" + encodeURIComponent(difficulty) +
+        "&review=" + encodeURIComponent(review) +
+        "&takeAgain=" + encodeURIComponent(takeAgain) +
+        "&email=" + encodeURIComponent(email) +
+        "&pass=" + encodeURIComponent(pass);
+
+    console.log(addReviewUrl);
+
+    return await fetchApi(apiUrl + ":" + apiPort + '/addReview?' + addReviewUrl);
+}
+
+async function api_getCourse(className) {
+    let apiCall = apiUrl + ":" + apiPort + "/course?title=" + className;
+    console.log(apiCall);
 
     // Make api call and wait for response before returning
     // Add CORS header to allow cross origin resource sharing
@@ -53,24 +63,49 @@ async function getClasses(userClassList) {
     //--- Receive and parse data---//
     // Iterate through each class in class list to get all all the schedules for each course
     for (let i = 0; i < userClassList.length; i++) {
-        let courseSchedules = await getClassAPI(userClassList[i]);
-        if (courseSchedules === "Class Does Not Exist")
+        let courseSchedules = await api_getCourse(userClassList[i]);
+
+        // Check if API returned successfully
+        if (courseSchedules.success === false){
+            // Upon failure return which class failed/not found in database
             return userClassList[i];
-        classListAPIReturn.push(courseSchedules);
+        } else {
+            // Class was found so add data to successful classes
+            classListAPIReturn.push(courseSchedules.data);
+        }
     }
 
     return classListAPIReturn;
 }
 
+async function api_searchProf(searchTerm) {
+    let apiCall = apiUrl + ":" + apiPort + "/searchProfList/" + searchTerm;
+
+    // Make api call and wait for response before returning
+    // Add CORS header to allow cross origin resource sharing
+    let response = await fetch(apiCall, {
+        mode: 'cors',
+        headers: {
+            'Access-Control-Allow-Origin':'*'
+        }
+    });
+    return await response.json();
+}
 //---END OF API CALLS---//
 
-/*
- * Change display to indicate an error in one of the classes from the input
- */
-function badClassInput(classError){
-    document.getElementById("classesInput").style.borderColor = "red";
-    document.getElementsByClassName("example-input-label")[1].textContent = "Error on class: " + classError;
-}
+
+// https://stackoverflow.com/questions/3954438/how-to-remove-item-from-array-by-value
+// Remove from array by value
+Array.prototype.remove = function() {
+    var what, a = arguments, L = a.length, ax;
+    while (L && this.length) {
+        what = a[--L];
+        while ((ax = this.indexOf(what)) !== -1) {
+            this.splice(ax, 1);
+        }
+    }
+    return this;
+};
 
 function parseUnavailableTimesInput() {
     let unavailArr = [];
@@ -105,12 +140,8 @@ function parseUnavailableTimesInput() {
 }
 
 
-//---ACTION LISTENERS---//
+//---EVENT HANDLERS---//
 function classSubmit() {
-    // Reset bad class input label if previous find schedules call returned in error
-    document.getElementsByClassName("example-input-label")[1].textContent = 'Ex. "CIS3223, CIS4345, CIS3515, CIS3296"';
-    document.getElementById("classesInput").style.borderColor = "black";
-
     moreOptionsDiv.style.display = "none"; // Hide more options dropdown to allow more space for calendar
 
     // Reset schedule if making a new schedule request
@@ -118,19 +149,18 @@ function classSubmit() {
     numAvailSchedules = -1;
     availSchedules = {schedule: [], classes: []};
 
-    let classInputList = document.getElementById('classesInput').value; // Get class input data
-    // Set default value if no classes were entered
-    if (classInputList === undefined || classInputList === "") {
-        classInputList = "cis3223, cis4345, cis3515, cis3296";
-    }
-    if (classInputList === "") return; // Check if class input is empty
+    // Bug fix: Needed encse no classes are specified at first, but then more are added since default classes
+    // added below wont clear out.
+    let selectedClassList = selectedClasses;
 
-    classInputList = classInputList.replace(/\s/g, ""); // Remove all empty spaces from input
-    let tokenizedClassInputList = classInputList.split(","); // Tokenize classes based on ','
+    // Set default value if no classes were entered
+    if (selectedClasses.length === 0) {
+        selectedClassList = ["cis3223", "cis4345", "cis3515", "cis3296"];
+    }
 
     let unavailTimes = parseUnavailableTimesInput();
 
-    getClasses(tokenizedClassInputList).then(data => {
+    getClasses(selectedClassList).then(data => {
         /*
         * If data is a string, then it will be the first class from the input that resulted in an error/class not found
         * from the api. If the data is not a string, then it is an array of unique course arrays holding all the objects
@@ -143,36 +173,119 @@ function classSubmit() {
 
             scheduleChecker(data); // Put in some serious work to find all combinations of possible schedules
             updateSchPageIndex(); // Update the counter indicating total number of available schedules
-        } else {
-            // Indicate error in class list input
-            badClassInput(data);
         }
     });
 }
 
-// Schedule left and right buttons
-document.getElementById("button_back").addEventListener("click", function(){
-    if (numAvailSchedules === -1) return; // No schedule created yet
+// Scroll through schedules using left and right buttons
+function calendarScrollButton(btn) {
+    if (numAvailSchedules <= 0) return; // No schedule created yet
 
-    // Only decrement schedule counter if currSchIndex (current schedule index) is positive
-    if (currSchIndex >= 1) --currSchIndex;
-    updateSchPageIndex();
-    genScheduleEvents(availSchedules, currSchIndex % numAvailSchedules);
-});
+    if (btn === "forward") {
+        currSchIndex = ++currSchIndex % numAvailSchedules;
+    } else {
+        // Only decrement schedule counter if currSchIndex (current schedule index) is positive
+        if (currSchIndex >= 1) --currSchIndex;
+    }
 
-document.getElementById("button_forward").addEventListener("click", function(){
-    if (numAvailSchedules === -1) return; // No schedule created yet
-
-    currSchIndex = ++currSchIndex % numAvailSchedules;
     updateSchPageIndex();
     genScheduleEvents(availSchedules, currSchIndex);
-});
+}
 
-document.getElementById("more-options-button").addEventListener("click", function () {
+function displayMoreOptions() {
     if (moreOptionsDiv.style.display === "none" || moreOptionsDiv.style.display === "") {
         moreOptionsDiv.style.display = "inline";
     } else {
         moreOptionsDiv.style.display = "none";
     }
+}
+
+function changeCalendarView() {
+    var mq = window.matchMedia( "(max-width: 1024px)" );
+    if (mq.matches) {
+        if (listElem.style.display !== "inline") {
+            // Make list visible
+            calendarElem.style.display = "none";
+            calendarElem.style.width = "0";
+            listElem.style.display = "inline";
+            listElem.style.width = "100%";
+        } else {
+            // Make calendar visible
+            listElem.style.display = "none";
+            listElem.style.width = "0";
+            calendarElem.style.display = "inline";
+            calendarElem.style.width = "100%";
+        }
+    }
+}
+//---END EVENT HANDLERS---//
+
+
+
+
+// Duplicate in review.js
+function createClassSearchList_SchedulePage(classes) {
+    $("#class-search-results").empty();
+
+    let newRows = [];
+
+    if (classes === null || classes.length === 0) {
+        newRows.push('<li><a class="dropdown-item">No Results</a></li>');
+    } else {
+        for (let i = 0; i < classes.length; i++) {
+            newRows.push('<li><a onclick=courseSelected_ReviewPage(this.textContent) class="dropdown-item">' + classes[i].subjectCourse + '</a></li>');
+        }
+    }
+
+    $('#class-search-results').append(newRows.join(""));
+}
+
+// Duplicate in review.js
+// Create a list of professors from the database once the user enters at least 3 characters
+function classSearchHandler_SchedulePage(val) {
+    val = val.replace(/\s/g,''); // Remove all spaces because no spaces in database class names
+
+    // Only start showing search results after 2 characters of input
+    if (val.length >= 2) {
+        findClassAPI(val).then(returnVal => {
+            document.getElementById("class-search-results").style.display = "inline";
+            if (returnVal.success === true) {
+                createClassSearchList_SchedulePage(returnVal.data);
+            }
+        });
+    }
+}
+
+function courseSelected_ReviewPage(className) {
+    if (!selectedClasses.includes(className)) {
+        document.getElementById("course-list-input").value = ""; // Clear search bar
+        document.getElementById("class-search-results").style.display = "none"; // Hide class dropdown until new search
+        selectedClasses.push(className);
+        let newClass = '<li class="list-inline-item"><a onclick="classListItemHandler(this)" class=" class-list-elem list-group-item">' + className + '</a></li>'
+        $('#selected-class-list').append(newClass);
+    }
+}
+
+function classListItemHandler(item) {
+    if (item.classList.contains('list-group-item-danger')) {
+        item.parentNode.parentNode.removeChild(item.parentNode);
+        selectedClasses.remove(item.textContent);
+    } else {
+        item.classList.add('list-group-item-danger');
+    }
+}
+
+$(document).click(function(event) {
+    // Hide class dropdown when clicked outside the dropdown
+    document.getElementById("class-search-results").style.display = "none";
+
+    var $target = $(event.target);
+    if(!$target.closest('.class-list-elem').length) {
+        const addedClasses = document.getElementsByClassName('class-list-elem');
+        console.log("Resetting class list removal danger class");
+        for (let i = 0; i < addedClasses.length; i++) {
+            console.log(addedClasses[i].classList);
+            addedClasses[i].classList.remove('list-group-item-danger');
+        }
+    }
 });
-//---END ACTION LISTENERS---//

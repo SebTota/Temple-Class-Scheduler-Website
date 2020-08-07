@@ -109,7 +109,7 @@ function scheduleOrderConcat(schedule, newClass) {
     let merged = [];
     let index1 = 0;
     let index2 = 0;
-    let current = 0;
+    let current = 0; // Current index of the new merged list
 
     while (current < (schedule.length + newClass.length)) {
 
