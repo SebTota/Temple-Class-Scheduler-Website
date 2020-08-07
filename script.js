@@ -275,7 +275,17 @@ function classListItemHandler(item) {
     }
 }
 
-// Hide class dropdown when clicked outside the dropdown
-$(document).click(function() {
+$(document).click(function(event) {
+    // Hide class dropdown when clicked outside the dropdown
     document.getElementById("class-search-results").style.display = "none";
+
+    var $target = $(event.target);
+    if(!$target.closest('.class-list-elem').length) {
+        const addedClasses = document.getElementsByClassName('class-list-elem');
+        console.log("Resetting class list removal danger class");
+        for (let i = 0; i < addedClasses.length; i++) {
+            console.log(addedClasses[i].classList);
+            addedClasses[i].classList.remove('list-group-item-danger');
+        }
+    }
 });
