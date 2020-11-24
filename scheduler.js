@@ -176,12 +176,12 @@ function checkScheduleFit(schedule, newClass) {
  */
 function findScheduleRec(availClasses, classList, currSchedule, currClasses, classIndex) {
     for (let section = 0; section < classList[classIndex].length; section++) {
-        classList[classIndex][section].title = classList[classIndex][section].title.replace("&amp;", "&");
-        let tempSchedule = checkScheduleFit(currSchedule, classList[classIndex][section].schedule);
+        classList[classIndex][section][0].title = classList[classIndex][section][0].title.replace("&amp;", "&");
+        let tempSchedule = checkScheduleFit(currSchedule, classList[classIndex][section][0].schedule);
 
         if (tempSchedule !== -1) {
             /*
-            * Copy array currClasses into tempCurrClasses to test if adding the new class would result in schedule
+            * Copy array currClasses into tempCurrClasses to test if adding the  new class would result in schedule
             * interference. Use slice() method to create a copy of the array instead of making a reference to
             * currClasses.
              */
@@ -216,7 +216,6 @@ function scheduleChecker(classObjects) {
     for (let i = 0; i < classObjects.length; i++) {
         let courseSchedules = classObjects[i];
 
-
         // Iterate through each section of a class
         for (let j = 0; j < courseSchedules.length; j++) {
             /*
@@ -224,12 +223,14 @@ function scheduleChecker(classObjects) {
             * ignore the class for schedule creation. This includes Research work courses.
              */
             let tempClass = JSON.parse(JSON.stringify(courseSchedules[j]));
-            let tempSchedule = parseScheduleInput(tempClass.schedule);
+            let tempSchedule = parseScheduleInput(tempClass[0].schedule);
 
             // Check if class has an actual schedule and only add it if it does
             if (tempSchedule !== -1) {
                 // Set the class schedule to the correctly formatted schedule
-                tempClass.schedule = tempSchedule;
+                // tempClass.schedule = tempSchedule;
+                tempClass.forEach(cls => cls.schedule = tempSchedule);
+
                 // Add class to the list of classes to be considered during schedule creation
                 classList[i][j] = tempClass;
             }
@@ -248,6 +249,8 @@ function scheduleChecker(classObjects) {
     * with the corresponding class objects (including the schedules) being stored in availSchedules.classes
      */
     findScheduleRec(availSchedules, classList, startSchedule, startClasses,0);
+    console.log('available schedules found:');
+    console.log(availSchedules)
     numAvailSchedules = availSchedules.classes.length; // Set to number of possible schedules found
     if (numAvailSchedules === 0) {
         console.log("No available schedules found");
