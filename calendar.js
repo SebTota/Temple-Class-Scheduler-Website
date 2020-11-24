@@ -120,7 +120,7 @@ function newListItem(courseObj, eventNum, scheduleIndex, multiple) {
 
         // buttonLeft.addEventListener("click", calItemScroll(item, scheduleIndex, 0, "backward"));
         buttonLeft.onclick = function() {
-            calItemScroll(item, scheduleIndex, eventNum-1,0, "backward")
+            calItemScroll(item, scheduleIndex, eventNum-1, "backward")
         }
 
         let buttonRight = document.createElement("button");
@@ -131,7 +131,7 @@ function newListItem(courseObj, eventNum, scheduleIndex, multiple) {
 
         // buttonRight.addEventListener("click", calItemScroll(item, scheduleIndex, 0, "forward"));
         buttonRight.onclick = function() {
-            calItemScroll(item, scheduleIndex, eventNum-1, 0, "forward")
+            calItemScroll(item, scheduleIndex, eventNum-1, "forward")
         }
 
         item.appendChild(buttonDiv);

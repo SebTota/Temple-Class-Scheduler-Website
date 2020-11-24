@@ -256,12 +256,13 @@ function calendarScrollButton(btn) {
  classIndex = Overall index to indicate which index to check in the array of schedules
  direction = Which way to more (forward/backward)
  */
-function calItemScroll(item, scheduleIndex, classIndex, displayIndex, direction) {
+function calItemScroll(item, scheduleIndex, classIndex, direction) {
     if (numAvailSchedules <= 0) return; // No schedule created yet
 
-    console.log(item);
+    let displayIndex = item.value;
 
-    const courseDisplayOptions = availSchedules.classes[scheduleIndex][classIndex]
+    const courseDisplayOptions = availSchedules.classes[currSchIndex][classIndex]
+    console.log(courseDisplayOptions);
     const numOptions = courseDisplayOptions.length
 
     if (direction === "forward") {
@@ -271,7 +272,9 @@ function calItemScroll(item, scheduleIndex, classIndex, displayIndex, direction)
         if (displayIndex >= 1) --displayIndex;
     }
 
-    const newCourseInfo = availSchedules.classes[scheduleIndex][classIndex][displayIndex];
+    item.value = displayIndex;
+
+    const newCourseInfo = availSchedules.classes[currSchIndex][classIndex][displayIndex];
     item.getElementsByClassName('item_crn')[0].textContent = newCourseInfo.crn;
 
 
