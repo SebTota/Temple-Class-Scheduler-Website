@@ -256,7 +256,7 @@ function calendarScrollButton(btn) {
  classIndex = Overall index to indicate which index to check in the array of schedules
  direction = Which way to more (forward/backward)
  */
-function calItemScroll(item, scheduleIndex, classIndex, direction) {
+function calItemScroll(item, classIndex, direction) {
     if (numAvailSchedules <= 0) return; // No schedule created yet
 
     let displayIndex = item.value;
@@ -268,8 +268,11 @@ function calItemScroll(item, scheduleIndex, classIndex, direction) {
     if (direction === "forward") {
         displayIndex = ++displayIndex % numOptions;
     } else {
-        // Only decrement schedule counter if currSchIndex (current schedule index) is positive
-        if (displayIndex >= 1) --displayIndex;
+        if (displayIndex >= 1) {
+            --displayIndex;
+        } else {
+            displayIndex = numOptions - 1;
+        }
     }
 
     item.value = displayIndex;
