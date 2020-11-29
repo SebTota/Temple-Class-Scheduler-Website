@@ -242,8 +242,11 @@ function calendarScrollButton(btn) {
     if (btn === "forward") {
         currSchIndex = ++currSchIndex % numAvailSchedules;
     } else {
-        // Only decrement schedule counter if currSchIndex (current schedule index) is positive
-        if (currSchIndex >= 1) --currSchIndex;
+        if (currSchIndex >= 1) {
+            --currSchIndex;
+        } else {
+            currSchIndex = numAvailSchedules - 1;
+        }
     }
 
     updateSchPageIndex();
