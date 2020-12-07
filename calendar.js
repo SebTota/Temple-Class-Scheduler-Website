@@ -25,27 +25,16 @@ function newEvent(course, eventNum, startTime, endTime) {
     eventData.setAttribute("data-start", startTime);
     eventData.setAttribute("data-end", endTime);
     eventData.setAttribute("data-event", "event-" + eventNum);
-    eventData.style.padding = "10px";
+    eventData.style.paddingLeft = "10px";
+    eventData.style.paddingRight = "10px";
+    eventData.style.paddingTop = "10px";
+    eventData.style.paddingBottom= "0";
 
     let eventTitle = document.createElement("em");
     eventTitle.classList.add("event-schedule-list-block");
     eventTitle.textContent = course.title;
 
-    let eventCrn = document.createElement("em");
-    eventCrn.classList.add("event-schedule-list-block");
-    eventCrn.classList.add("event-schedule-mobile");
-    eventCrn.textContent = "CRN: " + course.crn;
-
-    let eventProf = document.createElement("em");
-    eventProf.classList.add("event-schedule-list-block");
-    eventProf.classList.add("event-schedule-mobile");
-    eventProf.textContent = "Prof: " + course.instructor;
-
     eventData.appendChild(eventTitle);
-    eventData.appendChild(document.createElement("br"));
-    eventData.appendChild(eventCrn);
-    eventData.appendChild(document.createElement("br"));
-    eventData.appendChild(eventProf);
     event.appendChild(eventData);
 
     return event;
@@ -66,22 +55,78 @@ function addNewEventCal(course, day, eventNum, classTimeStr) {
     }
 }
 
-
 /*
 * Create a new HTML element that holds all the information about a specific class for the schedule class list
  */
-function newListItem(courseObj, eventNum) {
+function newListItem(courseObj, eventNum, scheduleIndex, multiple) {
     let item = document.createElement("li");
+    item.value = 0; // Indicates which position in the array this course display is in (0 by default)
     item.classList.add("list-group-item");
     item.classList.add("list_event_" + eventNum);
 
-    let title = document.createElement("p");
-    title.textContent = courseObj.title + " " + courseObj.crn;
-    let prof = document.createElement("p");
-    prof.textContent = courseObj.instructor;
+    let infoDiv = document.createElement("div");
 
-    item.appendChild(title);
-    item.appendChild(prof);
+    let title = document.createElement("p");
+    title.classList.add("item_title");
+    title.textContent = courseObj.subjectCourse + ": " + courseObj.title;
+
+    let crnLabel = document.createElement("p");
+    crnLabel.textContent = "CRN: ";
+    crnLabel.style.display = "inline";
+
+    let crn = document.createElement("p");
+    crn.classList.add("item_crn");
+    crn.textContent = courseObj.crn;
+    crn.style.display = "inline";
+
+    let profLabel = document.createElement("p");
+    profLabel.textContent = "Instr: ";
+    profLabel.style.display = "inline";
+
+    let prof = document.createElement("p");
+    prof.classList.add("item_prof");
+    prof.textContent = courseObj.instructor;
+    prof.style.display = "inline";
+
+    item.appendChild(infoDiv);
+    infoDiv.appendChild(title);
+    infoDiv.appendChild(crnLabel);
+    infoDiv.appendChild(crn);
+    infoDiv.appendChild(document.createElement("br"));
+    infoDiv.appendChild(profLabel);
+    infoDiv.appendChild(prof);
+    infoDiv.appendChild(document.createElement("br"));
+
+
+    if (multiple) {
+        let buttonDiv = document.createElement("div");
+
+        let buttonLeft = document.createElement("button");
+        buttonLeft.textContent = " < ";
+        buttonLeft.classList.add("btn-list-item-nav");
+        buttonLeft.classList.add("btn-sm");
+
+        // buttonLeft.addEventListener("click", calItemScroll(item, scheduleIndex, 0, "backward"));
+        buttonLeft.onclick = function() {
+            calItemScroll(item, eventNum-1, "backward")
+        }
+
+        let buttonRight = document.createElement("button");
+        buttonRight.textContent = " > ";
+        buttonRight.style.float = "right";
+        buttonRight.classList.add("btn-list-item-nav");
+        buttonRight.classList.add("btn-sm");
+
+        // buttonRight.addEventListener("click", calItemScroll(item, scheduleIndex, 0, "forward"));
+        buttonRight.onclick = function() {
+            calItemScroll(item, eventNum-1, "forward")
+        }
+
+        item.appendChild(buttonDiv);
+        buttonDiv.appendChild(buttonLeft);
+        buttonDiv.appendChild(buttonRight);
+    }
+
 
     return item;
 }
@@ -131,7 +176,7 @@ function genScheduleEvents(availSchedules, scheduleIndex) {
     let courseColor = 1;
     console.log(availSchedules.classes);
     for (let course = 0; course < availSchedules.classes[scheduleIndex].length; course++) { // Each course
-        let cls = availSchedules.classes[scheduleIndex][course]
+        let cls = availSchedules.classes[scheduleIndex][course][0]
 
         /*
         * Needed to make sure "Unavailable" events are all the same color
@@ -155,20 +200,20 @@ function genScheduleEvents(availSchedules, scheduleIndex) {
 
         if (cls.title !== "Unavailable") {
             document.getElementById("class-event-list").appendChild(
-                newListItem(availSchedules.classes[scheduleIndex][course], eventNum));
+                newListItem(availSchedules.classes[scheduleIndex][course][0], eventNum, course, availSchedules.classes[scheduleIndex][course].length > 1));
         } else if(addedUnavailable === "false") {
             document.getElementById("class-event-list").appendChild(
-                newListItem(availSchedules.classes[scheduleIndex][course], eventNum));
+                newListItem(availSchedules.classes[scheduleIndex][course][0], eventNum, course, false));
             addedUnavailable = "True";
         }
 
 
         for (let day = 0; day < numDaysInWeek; day++) { // Each day of the week
-            for (let sch = 0; sch < availSchedules.classes[scheduleIndex][course].schedule[day].length; sch++) { // Each start/end pair for that specific day
+            for (let sch = 0; sch < availSchedules.classes[scheduleIndex][course][0].schedule[day].length; sch++) { // Each start/end pair for that specific day
                 /*
                 * Find the start and end time (ensuring a HH:MM format to preserve future functions)
                  */
-                let classSchIntArr = availSchedules.classes[scheduleIndex][course].schedule[day][sch];
+                let classSchIntArr = availSchedules.classes[scheduleIndex][course][0].schedule[day][sch];
                 let classTimeStr = scheduleTimeFormatting(classSchIntArr[0], classSchIntArr[1]);
 
                 // Create new event based on given info

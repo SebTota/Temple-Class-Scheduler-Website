@@ -9,6 +9,15 @@ let moreOptionsDiv = document.getElementById("more-options-form");
 
 let selectedClasses = [];
 
+/*
+* Create a dynamic 2d array
+ */
+function create2dArray(arr, col) {
+    for (let x = 0; x < col; x++) {
+        arr[x] = [];
+    }
+}
+
 //---API CALLS---//
 async function fetchApi(apiCall){
     // Make api call and wait for response before returning
@@ -139,6 +148,14 @@ function parseUnavailableTimesInput() {
     return unavailArr;
 }
 
+function appendToDictList(dict, key, value) {
+    // Create array inside dictionary key if it doesn't exist
+    if (typeof(dict[key]) === 'undefined') {
+        dict[key] = [];
+    }
+    // Add value to array
+    dict[key].push(value);
+}
 
 //---EVENT HANDLERS---//
 function classSubmit() {
@@ -149,12 +166,13 @@ function classSubmit() {
     numAvailSchedules = -1;
     availSchedules = {schedule: [], classes: []};
 
-    // Bug fix: Needed encse no classes are specified at first, but then more are added since default classes
+    // Bug fix: Needed in case no classes are specified at first, but then more are added since default classes
     // added below wont clear out.
     let selectedClassList = selectedClasses;
 
     // Set default value if no classes were entered
     if (selectedClasses.length === 0) {
+        selectedClassList = ["cis3207", "math1015"];
         selectedClassList = ["cis3223", "cis3515", "cis3296"];
     }
 
@@ -171,7 +189,48 @@ function classSubmit() {
                 data = data.concat(unavailTimes);
             }
 
-            scheduleChecker(data); // Put in some serious work to find all combinations of possible schedules
+            console.log("data:");
+            console.log(data);
+
+            let combinedCoursesDict = [];
+
+            create2dArray(combinedCoursesDict, data.length)
+
+            for (let i = 0; i < combinedCoursesDict.length; i++) {
+                combinedCoursesDict[i] = {};
+            }
+
+            for (let i = 0; i < data.length; i++) {
+                for (let j = 0; j < data[i].length; j++) {
+                    let tempClass = data[i][j];
+                    appendToDictList(combinedCoursesDict[i], tempClass['schedule'], tempClass);
+                }
+            }
+
+            // console.log("cleaned data:");
+            // console.log(combinedCoursesDict);
+
+            let combinedCourses = [];
+            create2dArray(combinedCourses, data.length);
+
+            /*
+            Given an array of dictionaries holding arrays, extract the inner most arrays and append them to
+            combinedCourses array.
+             */
+            for (let i = 0; i < combinedCoursesDict.length; i++) {
+                for (let key in combinedCoursesDict[i]) {
+                    // check if the property/key is defined in the object itself, not in parent
+                    if (combinedCoursesDict[i].hasOwnProperty(key)) {
+                        // console.log(combinedCoursesDict[i][key]);
+                        combinedCourses[i].push(combinedCoursesDict[i][key])
+                    }
+                }
+            }
+
+            console.log("Combined courses:");
+            console.log(combinedCourses);
+
+            scheduleChecker(combinedCourses); // Put in some serious work to find all combinations of possible schedules
             updateSchPageIndex(); // Update the counter indicating total number of available schedules
         }
     });
@@ -184,12 +243,50 @@ function calendarScrollButton(btn) {
     if (btn === "forward") {
         currSchIndex = ++currSchIndex % numAvailSchedules;
     } else {
-        // Only decrement schedule counter if currSchIndex (current schedule index) is positive
-        if (currSchIndex >= 1) --currSchIndex;
+        if (currSchIndex >= 1) {
+            --currSchIndex;
+        } else {
+            currSchIndex = numAvailSchedules - 1;
+        }
     }
 
     updateSchPageIndex();
     genScheduleEvents(availSchedules, currSchIndex);
+}
+
+/*
+ Scroll through each section of class, if multiple were found
+ item = Div that shows class info
+ classIndex = Overall index to indicate which index to check in the array of schedules
+ direction = Which way to more (forward/backward)
+ */
+function calItemScroll(item, classIndex, direction) {
+    if (numAvailSchedules <= 0) return; // No schedule created yet
+
+    let displayIndex = item.value;
+
+    const courseDisplayOptions = availSchedules.classes[currSchIndex][classIndex]
+    console.log(courseDisplayOptions);
+    const numOptions = courseDisplayOptions.length
+
+    if (direction === "forward") {
+        displayIndex = ++displayIndex % numOptions;
+    } else {
+        if (displayIndex >= 1) {
+            --displayIndex;
+        } else {
+            displayIndex = numOptions - 1;
+        }
+    }
+
+    item.value = displayIndex;
+
+    const newCourseInfo = availSchedules.classes[currSchIndex][classIndex][displayIndex];
+    item.getElementsByClassName('item_crn')[0].textContent = newCourseInfo.crn;
+
+
+    // updateSchPageIndex();
+    // genScheduleEvents(availSchedules, currSchIndex);
 }
 
 function displayMoreOptions() {
