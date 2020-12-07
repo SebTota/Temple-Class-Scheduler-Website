@@ -25,28 +25,16 @@ function newEvent(course, eventNum, startTime, endTime) {
     eventData.setAttribute("data-start", startTime);
     eventData.setAttribute("data-end", endTime);
     eventData.setAttribute("data-event", "event-" + eventNum);
-    eventData.style.padding = "10px";
+    eventData.style.paddingLeft = "10px";
+    eventData.style.paddingRight = "10px";
+    eventData.style.paddingTop = "10px";
+    eventData.style.paddingBottom= "0";
 
     let eventTitle = document.createElement("em");
     eventTitle.classList.add("event-schedule-list-block");
     eventTitle.textContent = course.title;
 
-    /*let eventCrn = document.createElement("em");
-    eventCrn.classList.add("event-schedule-list-block");
-    eventCrn.classList.add("event-schedule-mobile");
-    eventCrn.textContent = "CRN: " + course.crn;
-
-    let eventProf = document.createElement("em");
-    eventProf.classList.add("event-schedule-list-block");
-    eventProf.classList.add("event-schedule-mobile");
-    eventProf.textContent = "Prof: " + course.instructor;
-     */
-
     eventData.appendChild(eventTitle);
-    //eventData.appendChild(document.createElement("br"));
-    //eventData.appendChild(eventCrn);
-    //eventData.appendChild(document.createElement("br"));
-    //eventData.appendChild(eventProf);
     event.appendChild(eventData);
 
     return event;
@@ -80,7 +68,7 @@ function newListItem(courseObj, eventNum, scheduleIndex, multiple) {
 
     let title = document.createElement("p");
     title.classList.add("item_title");
-    title.textContent = courseObj.title;
+    title.textContent = courseObj.subjectCourse + ": " + courseObj.title;
 
     let crnLabel = document.createElement("p");
     crnLabel.textContent = "CRN: ";
