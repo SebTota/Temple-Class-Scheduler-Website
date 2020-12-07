@@ -173,6 +173,7 @@ function classSubmit() {
     // Set default value if no classes were entered
     if (selectedClasses.length === 0) {
         selectedClassList = ["cis3207", "math1015"];
+        selectedClassList = ["cis3223", "cis3515", "cis3296"];
     }
 
     let unavailTimes = parseUnavailableTimesInput();
